@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>
+	        #info {
+	            position: absolute;
+	            top: 0px;
+	            width: 100%;
+	            padding: 10px;
+	            text-align: center;
+	            color: #ffff00
+	        }
+
+	        body {
+	            overflow: hidden;
+	        }
+
+        </style>
+    </head>
+
+    <body> 
+	    <div id="info">
+			
+		<a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
+			minimal three.js<br>
+			press any key to play or stop animate.<br>
+			or pess the button below<br>
+			<button id="train_s" >Start/Stop the train</button>
+		</div>
+	    <script src="https://threejs.org/build/three.min.js"></script>
+	    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+	        var camera, scene, renderer;
+            var train, angle= 1.57079, clock, time = 0, motion = false, mode = 0;
+
+            init();
+            animate();
+			
+			$("#train_s").click(function() {
+				motion = !motion;
+			});
+
+			
+            function init() {
+
+	            window.addEventListener('keydown',  function(e){
+                    if(motion == false){
+                        motion = true;
+                    }else if(motion == true){
+                        motion = false;
+                    }
+                });  
+
+                scene = new THREE.Scene();
+	            clock = new THREE.Clock();
+  
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setClearColor(0x888888);
+                document.body.appendChild(renderer.domElement);
+
+                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+                camera.position.z = 450;
+                camera.position.y = 450;
+                let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+                ////////////////////////////////////////////////////////////////
+                var gridXZ = new THREE.GridHelper(300, 30, 'red', 'white');
+                scene.add(gridXZ);
+	
+                train = new THREE.Group();
+ 
+				let trainBody = new THREE.Mesh(new THREE.BoxGeometry(10,10,30), new THREE.MeshNormalMaterial());
+				  
+				let chimney = new THREE.Mesh (new THREE.CylinderGeometry (4,4,10,12), new THREE.MeshNormalMaterial());
+				chimney.position.y = 5;
+				chimney.position.z = -10;
+				  
+				train.add(trainBody,chimney);
+				train.position.set(100,5,-50);
+				train.rotation.y = 1.57079;
+				scene.add(train);
+			}
+
+            function animate() {
+                var radius = 50,dis = -1,dt = clock.getDelta();
+				
+                if(motion==true){
+				  if(mode == 0){
+					var x = train.position.x+(120*dt*dis);
+					train.rotation.y = angle = 1.57079;
+					train.position.set(x,5,-50);					
+					if(x <= -100){
+						mode =1;
+					}
+
+				  }else if(mode == 1){
+					train.position.set((radius*Math.cos(angle))-100 ,5 ,-radius*Math.sin(angle));
+					train.rotation.y = angle;
+					angle += 2.38*dt;
+					if(angle >= Math.PI+Math.PI/2){
+						mode = 2;
+					}
+				  }else if(mode == 2){
+					var x = train.position.x-(120*dt*dis);
+					train.rotation.y = angle = 3*1.57079;
+					train.position.set(x,5,50);
+					if(x >= 100){
+						mode =3;
+					}
+				  }else if(mode == 3){
+					train.position.set((radius*Math.cos(angle))+100 ,5 ,-radius*Math.sin(angle));
+					train.rotation.y = angle;
+					angle += 2.38*dt;
+					if(angle >= Math.PI*2+Math.PI/2){
+						mode = 0;
+					}
+				  }
+                }
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+        </script>
+    </body>
+</html>
