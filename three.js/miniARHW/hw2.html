@@ -140,22 +140,29 @@ function addMarkerHiro(){
 	let material2 = new THREE.MeshBasicMaterial( { color: 0x00ffff, side: THREE.DoubleSide} );
 	let circle2 = new THREE.Mesh( geometry2, material2 );
 	group.add( circle2 );  
-	
+	group.position.set(0, 0, -2);
 	group.rotateX(-Math.PI/2);
 	  
-	var geometry = new THREE.ConeGeometry( radius/2, radius, 4 );
+	var geometry = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var material = new THREE.MeshBasicMaterial( {color: 0xFF5809 });
 	var cone = new THREE.Mesh( geometry, material);
 	cone.rotateX(Math.PI/2);
-	cone.position.set(0, 0, -radius);
+	cone.position.set(0, 0, -radius-2);
 	markerRoot.add( cone );
 	  
-	var geometryline = new THREE.ConeGeometry( radius/2, radius, 4 );
+	var geometryline = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var materialline = new THREE.MeshBasicMaterial( {color: 0x000000,opacity: 10, wireframe: true} );
 	var coneline = new THREE.Mesh( geometryline, materialline );
 	coneline.rotateX(Math.PI/2);
-	coneline.position.set(0, 0, -radius);
+	coneline.position.set(0, 0, -radius-2);
 	markerRoot.add( coneline );
+	
+	const geometrypl = new THREE.PlaneGeometry( 1, 1 );
+	const materialpl = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+	const plane = new THREE.Mesh( geometrypl, materialpl );
+	plane.rotateX(Math.PI/2); 
+	markerRoot.add( plane );
+	
 	
 	return markerRoot;
 }	
