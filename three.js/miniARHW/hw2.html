@@ -4,40 +4,17 @@
 <!-- three.js library -->
 <script src='../examples/vendor/three.js/build/three.min.js'></script>
 <script src="../examples/vendor/three.js/examples/js/libs/stats.min.js"></script>
-<script src="https://threejs.org/build/three.min.js"></script>
-<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <!-- ar.js -->
 <script src="../build/ar.js"></script>
 <script>THREEx.ArToolkitContext.baseURL = '../'</script>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js">
+</script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <head>
-<title> miniAR HW01 </title>
+<title> miniAR HW02 </title>
 </head>
-
-<style>
-#info {
-  position: absolute;
-  top: 0px;
-  width: 100%;
-  padding: 10px;
-  text-align: center;
-  color: #ffff00
-}
-#spinner{
-  position: absolute;
-  width: 30%;
-  text-align: center;
-  font-size: 40px;
-  line-height: 10px;
-  color: #ffff00;
-  background-color: #888888;
-}
-
-body {
-  overflow: hidden;
-}
-</style>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
 <div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
@@ -64,12 +41,13 @@ var group;
 init();
 animate();
 
+$('#toggle').click (
+   function() {
+		rollable = ! rollable;  // toggle 
+	}
+);
+
 function init() {
-	$('#toggle').click (
-	   function() {
-			rollable = ! rollable;  // toggle 
-		}
-	);
 	
 	// init renderer
 	renderer	= new THREE.WebGLRenderer({
@@ -145,6 +123,7 @@ function addMarkerHiro(){
 		type : 'pattern',
 		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
 	})
+	//---------------------------------------------------------------------
 	group = new THREE.Group();
 	markerRoot.add (group);
 	let geometry0 = new THREE.CircleGeometry( radius, 32, Math.PI/2, 2*Math.PI/3);
