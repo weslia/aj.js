@@ -14,12 +14,39 @@
 
 <head>
 <title> miniAR HW02 </title>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00
+}
+#spinner{
+  position: absolute;
+  width: 30%;
+  text-align: center;
+  font-size: 40px;
+  line-height: 10px;
+  color: #ffff00;
+  background-color: #888888;
+}
+
+body {
+  overflow: hidden;
+}
+</style>
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
 <div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
 <a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
 	miniARHW HW02
+</div>
+<div id="info">
+  hw2helper - 1<br>
+  <button id='toggle'>toggle</button>
 </div>
 <div id="spinner">
   <p id="text" style ="color:red">color</p>
