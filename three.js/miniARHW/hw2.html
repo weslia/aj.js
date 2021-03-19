@@ -17,15 +17,26 @@
 <style>
 #info {
   position: absolute;
-  top: 0px;
+  top: 10px;
   width: 100%;
   padding: 10px;
   text-align: center;
-  color: #ffff00
+  z-index: 1;
+  color: #ffff00;
 }
+#btoggle {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00;
+}
+
 #spinner{
   position: absolute;
   width: 30%;
+  top: 30px;
   text-align: center;
   font-size: 40px;
   line-height: 10px;
@@ -35,17 +46,18 @@
 
 body {
   overflow: hidden;
+  margin : 0px;
+  font-family: Monospace;
 }
 </style>
 </head>
 
-<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
-<div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
+<body>
+<div id="info">
 <a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
 	miniARHW HW02
 </div>
-<div id="info">
-  hw2helper - 1<br>
+<div id="btoggle">
   <button id='toggle'>toggle</button>
 </div>
 <div id="spinner">
