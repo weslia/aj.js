@@ -66,8 +66,8 @@ animate();
 
 function init() {
 
-	function init() {
-		$('#toggle').click (
+	
+	$('#toggle').click (
 	   function() {
 			rollable = ! rollable;  // toggle 
 		}
@@ -136,7 +136,6 @@ function init() {
 		// copy projection matrix to camera
 		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
 	})
-	
 	markerHiro = addMarkerHiro();
 	scene.add (markerHiro); 
 	}
