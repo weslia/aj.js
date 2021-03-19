@@ -140,21 +140,21 @@ function addMarkerHiro(){
 	let material2 = new THREE.MeshBasicMaterial( { color: 0x00ffff, side: THREE.DoubleSide} );
 	let circle2 = new THREE.Mesh( geometry2, material2 );
 	group.add( circle2 );  
-	group.position.set(0,2,0);
+	
 	group.rotateX(-Math.PI/2);
 	  
 	var geometry = new THREE.ConeGeometry( radius/2, radius, 4 );
 	var material = new THREE.MeshBasicMaterial( {color: 0xFF5809 });
 	var cone = new THREE.Mesh( geometry, material);
 	cone.rotateX(Math.PI/2);
-	cone.position.set(0, 2, -radius);
+	cone.position.set(0, 0, -radius);
 	markerRoot.add( cone );
 	  
 	var geometryline = new THREE.ConeGeometry( radius/2, radius, 4 );
 	var materialline = new THREE.MeshBasicMaterial( {color: 0x000000,opacity: 10, wireframe: true} );
 	var coneline = new THREE.Mesh( geometryline, materialline );
 	coneline.rotateX(Math.PI/2);
-	coneline.position.set(0, 2, -radius);
+	coneline.position.set(0, 0, -radius);
 	markerRoot.add( coneline );
 	
 	return markerRoot;
