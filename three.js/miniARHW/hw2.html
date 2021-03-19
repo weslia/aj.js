@@ -65,8 +65,6 @@ init();
 animate();
 
 function init() {
-
-	
 	$('#toggle').click (
 	   function() {
 			rollable = ! rollable;  // toggle 
@@ -138,7 +136,6 @@ function init() {
 	})
 	markerHiro = addMarkerHiro();
 	scene.add (markerHiro); 
-	}
 }
 	
 function addMarkerHiro(){
@@ -149,40 +146,37 @@ function addMarkerHiro(){
 		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
 	})
 	group = new THREE.Group();
-	  markerRoot.add (group);
-	let geometry0 = new THREE.CircleGeometry( radius, 32, Math.PI/2, 
-	  2*Math.PI/3);
-	  let material0 = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide} );
-	  let circle0 = new THREE.Mesh( geometry0, material0 );
-	  group.add( circle0 );  
+	markerRoot.add (group);
+	let geometry0 = new THREE.CircleGeometry( radius, 32, Math.PI/2, 2*Math.PI/3);
+	let material0 = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide} );
+	let circle0 = new THREE.Mesh( geometry0, material0 );
+	group.add( circle0 );  
 
-	  let geometry1 = new THREE.CircleGeometry( radius, 32, Math.PI/2 + 2/3*Math.PI, 
-	  2*Math.PI/3);
-	  let material1 = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide} );
-	  let circle1 = new THREE.Mesh( geometry1, material1 );
-	  group.add( circle1 );  
+	let geometry1 = new THREE.CircleGeometry( radius, 32, Math.PI/2 + 2/3*Math.PI, 2*Math.PI/3);
+	let material1 = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide} );
+	let circle1 = new THREE.Mesh( geometry1, material1 );
+	group.add( circle1 );  
 
-	  let geometry2 = new THREE.CircleGeometry( radius, 32, Math.PI/2 - 2/3*Math.PI, 
-	  2*Math.PI/3);
-	  let material2 = new THREE.MeshBasicMaterial( { color: 0x00ffff, side: THREE.DoubleSide} );
-	  let circle2 = new THREE.Mesh( geometry2, material2 );
-		group.add( circle2 );  
-		group.position.set(0,2,0);
-	  group.rotateX(-Math.PI/2);
+	let geometry2 = new THREE.CircleGeometry( radius, 32, Math.PI/2 - 2/3*Math.PI, 2*Math.PI/3);
+	let material2 = new THREE.MeshBasicMaterial( { color: 0x00ffff, side: THREE.DoubleSide} );
+	let circle2 = new THREE.Mesh( geometry2, material2 );
+	group.add( circle2 );  
+	group.position.set(0,2,0);
+	group.rotateX(-Math.PI/2);
 	  
-	  var geometry = new THREE.ConeGeometry( radius/2, radius, 4 );
-	  var material = new THREE.MeshBasicMaterial( {color: 0xFF5809 });
-	  var cone = new THREE.Mesh( geometry, material);
-	  cone.rotateX(Math.PI/2);
-	  cone.position.set(0, 2, -radius);
-	  markerRoot.add( cone );
+	var geometry = new THREE.ConeGeometry( radius/2, radius, 4 );
+	var material = new THREE.MeshBasicMaterial( {color: 0xFF5809 });
+	var cone = new THREE.Mesh( geometry, material);
+	cone.rotateX(Math.PI/2);
+	cone.position.set(0, 2, -radius);
+	markerRoot.add( cone );
 	  
-	  var geometryline = new THREE.ConeGeometry( radius/2, radius, 4 );
-	  var materialline = new THREE.MeshBasicMaterial( {color: 0x000000,opacity: 10, wireframe: true} );
-	  var coneline = new THREE.Mesh( geometryline, materialline );
-	  coneline.rotateX(Math.PI/2);
-	  coneline.position.set(0, 2, -radius);
-	  markerRoot.add( coneline );
+	var geometryline = new THREE.ConeGeometry( radius/2, radius, 4 );
+	var materialline = new THREE.MeshBasicMaterial( {color: 0x000000,opacity: 10, wireframe: true} );
+	var coneline = new THREE.Mesh( geometryline, materialline );
+	coneline.rotateX(Math.PI/2);
+	coneline.position.set(0, 2, -radius);
+	markerRoot.add( coneline );
 	
 	return markerRoot;
 }	
