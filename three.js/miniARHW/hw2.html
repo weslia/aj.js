@@ -226,11 +226,11 @@ function animate() {
 	  group.rotation.z = angle;
 	  
 	  if(angle >= 0 && angle < Math.PI*2/3){
-		$('#text').css ('color', '#ff0000');
+		$('#text').css ('color', '#0000ff');
 	  }else if(angle >= Math.PI*2/3 && angle < Math.PI*4/3){
 		$('#text').css ('color', '#00ff00');
 	  }else{
-		$('#text').css ('color', '#0000ff');
+		$('#text').css ('color', '#ff0000');
 	  }
 	renderer.render (scene, camera);	
 }
