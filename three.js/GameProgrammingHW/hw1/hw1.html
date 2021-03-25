@@ -29,15 +29,15 @@
 		<audio id="wallCollisionSound" style="display:none">
 			<source src="wallCollisionSound.mp3" type='audio/mp3'>
 		</audio>
-		<audio id="punkCollisionSound" style="display:none">
-			<source src="punkCollisionSound.mp3" type='audio/mp3'>
+		<audio id="puckCollisionSound" style="display:none">
+			<source src="puckCollisionSound.mp3" type='audio/mp3'>
 		</audio>
         <script>
 	        var camera, scene, renderer;
 			/////////////////////////////self var
 			var radius = 10, wallWidth = 20;
 			var pucks = [];
-			var punkCollisionSound,wallCollisionSound;
+			var puckCollisionSound,wallCollisionSound;
 
 			class Puck {
 			  constructor (pos, vel, force, color) {
@@ -132,7 +132,7 @@
 						continue;
 					let dis = puck.pos.distanceTo( pucks[i].pos);
 					if( dis <= 2*radius){
-						punkCollisionSound.play();
+						puckCollisionSound.play();
 						let v1MinusV2 = puck.vel.clone().sub(pucks[i].vel);
 						let x1minusX2 = puck.pos.clone().sub(pucks[i].pos);
 						let v1disPower = puck.pos.clone().distanceToSquared(pucks[i].pos);
