@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>
+	        #info {
+	            position: absolute;
+	            top: 0px;
+	            width: 100%;
+	            padding: 10px;
+	            text-align: center;
+	            color: #ffff00
+	        }
+
+	        body {
+	            overflow: hidden;
+	        }
+
+        </style>
+    </head>
+
+    <body> 
+	    <div id="info">
+			<a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
+				minimal three.js<br>	
+		</div>
+	    <script src="https://threejs.org/build/three.min.js"></script>
+		<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+		<audio id="wallCollisionSound" style="display:none">
+			<source src="HW1/wallCollisionSound.mp3" type='audio/mp3'>
+		</audio>
+		<audio id="punkCollisionSound" style="display:none">
+			<source src="HW1/punkCollisionSound.mp3" type='audio/mp3'>
+		</audio>
+        <script>
+	        var camera, scene, renderer;
+			/////////////////////////////self var
+			var radius = 10, wallWidth = 20;
+			var pucks = [];
+			var punkCollisionSound,wallCollisionSound;
+
+			class Puck {
+			  constructor (pos, vel, force, color) {
+				this.pos = pos;
+				this.vel = vel;
+				this.force = force;
+				this.object = buildPuck(color);
+				this.object.position.copy(pos);
+				scene.add (this.object);
+			  }
+			  
+			  update(dt) {
+				this.vel.add (this.force.clone().multiplyScalar (dt));
+				this.pos.add (this.vel.clone().multiplyScalar (dt));
+				this.object.position.copy (this.pos);
+			  }
+			}
+
+			class Wall {
+			  constructor (pos, rotate) {
+				this.object = buildWall();
+				this.pos = pos;
+				this.rotate = rotate;
+				this.object.position.copy(pos);
+				this.object.rotateY(rotate);
+				scene.add (this.object);
+			  }
+			}
+
+			init();
+			animate();
+
+			function init() {
+
+				scene = new THREE.Scene();
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.setClearColor(0x888888);
+				document.body.appendChild(renderer.domElement);
+
+				camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+				camera.position.set(0, 350, 50);
+				let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+				////////////////////////////////////////////////////////////////self object
+				collisionSound = document.getElementById ('collisionsound');
+				ballcollision = document.getElementById ('ballcollision');
+
+				var floor = new THREE.Mesh (new THREE.PlaneGeometry(200,200), new THREE.MeshPhongMaterial({color:"gray", side: THREE.DoubleSide}));
+				floor.rotation.x = -Math.PI/2;
+				scene.add (floor);
+
+				let light = new THREE.PointLight( 0xffffff, 1, 1000);
+				light.position.set (0, 30, 0);
+				scene.add(light);
+
+				var wallUP = new Wall(new THREE.Vector3(-10, 10, -100), 0);
+				var wallDOWN = new Wall(new THREE.Vector3(10, 10, 100), 0);
+				var wallLEFT = new Wall(new THREE.Vector3(100, 10, -10), Math.PI/2);
+				var wallRIGHT = new Wall(new THREE.Vector3(-100, 10, 10),Math.PI/2);
+
+				var puck1 = new Puck(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0,0,10), new THREE.Vector3(0,0,0), 0.1);
+				pucks.push(puck1);
+				var puck2 = new Puck(new THREE.Vector3(10, 0, 30), new THREE.Vector3(10,0,8), new THREE.Vector3(0,0,0), 0.3);
+				pucks.push(puck2);
+				var puck3 = new Puck(new THREE.Vector3(-30, 0, 0), new THREE.Vector3(-8,0,-10), new THREE.Vector3(0,0,0), 0.5);
+				pucks.push(puck3);
+				var puck4 = new Puck(new THREE.Vector3(60, 0, 0), new THREE.Vector3(-20,0,-16), new THREE.Vector3(0,0,0), 0.7);
+				pucks.push(puck4);
+				var puck5 = new Puck(new THREE.Vector3(-60, 0, 0), new THREE.Vector3(16,0,20), new THREE.Vector3(0,0,0), 0.9);
+				pucks.push(puck5);
+			}
+
+			function animate() {
+
+				requestAnimationFrame(animate);
+				render();
+				/////////////////////////// self action
+
+				var dt = 0.1;
+				for (let i = 0; i < pucks.length; i++){
+					wallCollision(pucks[i]);
+					punkCollision(pucks[i]);
+					pucks[i].update (dt);
+				}
+			}
+
+			function punkCollision(puck){
+				for (let i = 0; i < pucks.length; i++){
+					if(puck==pucks[i])
+						continue;
+					let dis = puck.pos.distanceTo( pucks[i].pos);
+					if( dis <= 2*radius){
+						punkCollisionSound.play();
+						let v1MinusV2 = puck.vel.clone().sub(pucks[i].vel);
+						let x1minusX2 = puck.pos.clone().sub(pucks[i].pos);
+						let v1disPower = puck.pos.clone().distanceToSquared(pucks[i].pos);
+						let v1upper = x1minusX2.clone().multiplyScalar(v1MinusV2.clone().dot(x1minusX2));
+						let v1all = v1upper.divideScalar(v1disPower);
+
+						let v2MinusV1 = pucks[i].vel.clone().sub(puck.vel);
+						let x2minusX1 = pucks[i].pos.clone().sub(puck.pos);
+						let v2disPower = pucks[i].pos.clone().distanceToSquared(puck.pos);
+						let v2upper = x2minusX1.clone().multiplyScalar(v2MinusV1.clone().dot(x2minusX1));
+						let v2all = v2upper.divideScalar(v2disPower);
+						puck.vel = puck.vel.clone().sub(v1all);
+						pucks[i].vel = pucks[i].vel.clone().sub(v2all);
+
+						let hatT = pucks[i].pos.clone().sub(puck.pos).normalize();
+						let d = 2*radius - puck.pos.distanceTo(pucks[i].pos);
+						puck.pos = puck.pos.clone().sub(hatT.multiplyScalar(d/2)); 
+						pucks[i].pos = pucks[i].pos.clone().add(hatT.multiplyScalar(d/2)); 
+					}
+				}
+			}
+
+			function wallCollision(puck){
+				// wall-collision
+				let limit = radius+wallWidth/2;
+				if (puck.pos.z < -100+limit) {
+					wallCollisionSound.play();
+					puck.vel.z = - puck.vel.z;
+					puck.pos.z = -100+limit;
+				}
+				if (puck.pos.z > 100-limit) {
+					wallCollisionSound.play();
+					puck.vel.z = - puck.vel.z;
+					puck.pos.z = 100-limit;
+				}
+				if (puck.pos.x < -100+limit) {
+					wallCollisionSound.play();
+					puck.vel.x = - puck.vel.x;
+					puck.pos.x = -100+limit;
+				}
+				if (puck.pos.x > 100-limit) {
+					wallCollisionSound.play();
+					puck.vel.x = - puck.vel.x;
+					puck.pos.x = 100-limit;
+				}
+			}
+
+			function buildWall(){
+				var wall = new THREE.Mesh (new THREE.BoxGeometry(200, 20, wallWidth), new THREE.MeshPhongMaterial({color:"#BEBEBE", transparent: true, opacity:0.4}));
+				return wall;
+			}
+
+			function buildPuck (color) {
+				var group = new THREE.Group();
+				//////// set color and mesh
+				let puckMat = new THREE.MeshPhongMaterial();
+				puckMat.color = new THREE.Color().setHSL (/*Math.random()*/color, 1, 0.5);
+				//////// create Cylinder
+				let puck = new THREE.Mesh (new THREE.CylinderGeometry(radius,radius,4,20), puckMat);
+				puck.position.set(0, 2.1, 0);
+				group.add (puck);
+				/////// create light
+				let light = new THREE.PointLight( 0xffffff, 0.7);
+				light.color.copy (puckMat.color);
+				light.position.copy (puck.position);
+				light.position.y += 12;
+				group.add( light );
+
+				return group;
+			}
+
+			function render() {
+				renderer.render(scene, camera);
+			}
+        </script>
+    </body>
+</html>
