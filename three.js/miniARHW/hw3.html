@@ -224,14 +224,14 @@ function addMarkerHiro(){
 	var geometry = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var material = new THREE.MeshBasicMaterial( {color: 0xffffff });
 	var cone = new THREE.Mesh( geometry, material);
-	cone.rotateX(Math.PI/2);
+	cone.rotateX(-Math.PI/2);
 	cone.position.set(0, 0, -radius);
 	group.add( cone );
 	  
 	var geometryline = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var materialline = new THREE.MeshBasicMaterial( {color: 0x000000,opacity: 10, wireframe: true} );
 	var coneline = new THREE.Mesh( geometryline, materialline );
-	coneline.rotateX(Math.PI/2);
+	coneline.rotateX(-Math.PI/2);
 	coneline.position.set(0, 0, -radius);
 	group.add( coneline );
 	
