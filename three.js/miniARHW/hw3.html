@@ -72,6 +72,7 @@ var mouse = new THREE.Vector2();
 
 
 // HUD
+var pickables = [];
 var halfH = 10;
 var whRatio = window.innerWidth / window.innerHeight;
 var halfW = halfH * whRatio;
@@ -185,7 +186,8 @@ function init() {
 		  sceneHUD.add(button.mesh);
 		},
 	);
-	scene.add (markerHiro); 
+	scene.add (markerHiro);
+	pickables.push (markerHiro);	
 }
 	
 function addMarkerHiro(){
@@ -203,7 +205,7 @@ function addMarkerHiro(){
 	let circle0 = new THREE.Mesh( geometry0, material0 );
 	circle0.rotateX(-Math.PI/2);
 	markerRoot.add( circle0 );  
-
+	
 	let geometry1 = new THREE.CircleGeometry( radius, 32, Math.PI/2 + 2/3*Math.PI, 2*Math.PI/3);
 	let material1 = new THREE.MeshBasicMaterial( { color: 0x00ff00, side: THREE.DoubleSide} );
 	let circle1 = new THREE.Mesh( geometry1, material1 );
@@ -283,12 +285,14 @@ function clamp (x, xLo, xHi) {
 window.addEventListener ('mousedown', onMouseDown, false);
 function onMouseDown (event) {
 	event.preventDefault();
-	mouse.x = event.clientX;
-	mouse.y = event.clientY;
-	let buttonx = window.window.innerWidth/2+halfW/2;
-	let buttony = window.window.innerHeight/2-halfH/2;
-	console.log(mouse.x, mouse.y, buttonx, buttony, buttonSize)
-	if (mouse.x > buttonx + buttonSize/2 && mouse.x < buttonx - buttonSize/2) {
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	// find intersections (only pick the HUD scene, using OrthographicCamera)  		
+	raycaster.setFromCamera(mouse, cameraHUD);
+				
+	var intersects = raycaster.intersectObjects(pickables);
+	if (intersects.length > 0) {
 		console.log ('picked')
 		rollable = !rollable;
 	} else {
