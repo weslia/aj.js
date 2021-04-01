@@ -189,7 +189,14 @@ function init() {
 		},
 	);
 	scene.add (markerHiro);
-		
+	
+	var Device = !!navigator.platform.match(/iPhone|iPod|iPad|Android/)
+	if(Device){
+		document.addEventListener('touchstart',onMouseDown,false);
+	}else{
+		window.addEventListener ('mousedown', onMouseDown, false);
+		window.addEventListener ('mouseup', onMouseUP, false);
+	}	
 }
 	
 function addMarkerHiro(){
@@ -283,8 +290,6 @@ function clamp (x, xLo, xHi) {
   else return x;
 }
 
-
-window.addEventListener ('mousedown', onMouseDown, false);
 function onMouseDown (event) {
 	event.preventDefault();
 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -302,9 +307,24 @@ function onMouseDown (event) {
 	}
 }
 
-window.addEventListener ('mouseup', onMouseUP, false);
 function onMouseUP (event) {
 		rollable = false;
 }
+/*
+function touches (event) {
+	event.preventDefault();
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
+	// find intersections (only pick the HUD scene, using OrthographicCamera)  		
+	raycaster.setFromCamera(mouse, cameraHUD);
+				
+	var intersects = raycaster.intersectObjects(pickables);
+	if (intersects.length > 0) {
+		console.log ('picked')
+		rollable = !rollable;
+	} else {
+		console.log ('no hit')
+	}
+}*/
 </script></body>
