@@ -203,19 +203,19 @@ function addMarkerHiro(){
 	group = new THREE.Group();
 	markerRoot.add (group);
 	let geometry0 = new THREE.CircleGeometry( radius, 32, Math.PI/2, 2*Math.PI/3);
-	let material0 = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide} );
+	let material0 = new THREE.MeshBasicMaterial( { color: 'blue', side: THREE.DoubleSide} );
 	let circle0 = new THREE.Mesh( geometry0, material0 );
 	circle0.rotateX(-Math.PI/2);
 	markerRoot.add( circle0 );  
 	
 	let geometry1 = new THREE.CircleGeometry( radius, 32, Math.PI/2 + 2/3*Math.PI, 2*Math.PI/3);
-	let material1 = new THREE.MeshBasicMaterial( { color: 0x00ff00, side: THREE.DoubleSide} );
+	let material1 = new THREE.MeshBasicMaterial( { color: 'red', side: THREE.DoubleSide} );
 	let circle1 = new THREE.Mesh( geometry1, material1 );
 	circle1.rotateX(-Math.PI/2);
 	markerRoot.add( circle1 );  
 
 	let geometry2 = new THREE.CircleGeometry( radius, 32, Math.PI/2 - 2/3*Math.PI, 2*Math.PI/3);
-	let material2 = new THREE.MeshBasicMaterial( { color: 0x0000ff, side: THREE.DoubleSide} );
+	let material2 = new THREE.MeshBasicMaterial( { color: 'green', side: THREE.DoubleSide} );
 	let circle2 = new THREE.Mesh( geometry2, material2 );
 	circle2.rotateX(-Math.PI/2);
 	markerRoot.add( circle2 );  
@@ -224,14 +224,14 @@ function addMarkerHiro(){
 	var geometry = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var material = new THREE.MeshBasicMaterial( {color: 0xffffff });
 	var cone = new THREE.Mesh( geometry, material);
-	cone.rotateX(-Math.PI/2);
+	cone.rotateX(Math.PI/2);
 	cone.position.set(0, 0, -radius);
 	group.add( cone );
 	  
 	var geometryline = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var materialline = new THREE.MeshBasicMaterial( {color: 0x000000,opacity: 10, wireframe: true} );
 	var coneline = new THREE.Mesh( geometryline, materialline );
-	coneline.rotateX(-Math.PI/2);
+	coneline.rotateX(Math.PI/2);
 	coneline.position.set(0, 0, -radius);
 	group.add( coneline );
 	
@@ -268,11 +268,11 @@ function animate() {
 	  group.rotation.y = angle;
 	  
 	  if(angle >= 0 && angle < Math.PI*2/3){
-		$('#text').css ('color', '#0000ff');
+		$('#text').css ('color', 'Blue');
 	  }else if(angle >= Math.PI*2/3 && angle < Math.PI*4/3){
-		$('#text').css ('color', '#00ff00');
+		$('#text').css ('color', 'Red');
 	  }else{
-		$('#text').css ('color', '#ff0000');
+		$('#text').css ('color', 'Green');
 	  }
 		
 }
