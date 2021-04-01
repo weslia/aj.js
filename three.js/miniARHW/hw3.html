@@ -63,6 +63,7 @@ var renderer, scene, camera;
 var stats;
 var arToolKitSource, arToolKitContext;
 var markerHiro;
+var markerRoot = new THREE.Group();
 //--------------------------
 var rollable = false, radius = 2.14;
 var angle = 0, omega = 0;
@@ -184,7 +185,7 @@ function init() {
 }
 	
 function addMarkerHiro(){
-	let markerRoot = new THREE.Group()
+	
 
 	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
 		type : 'pattern',
@@ -239,7 +240,7 @@ function animate() {
 	
 	renderer.clear();
 	renderer.render (scene, camera);
-	button.mesh.meterial.visible = arToolkitSource.visible;
+	button.mesh.meterial.visible = markerRoot.visible;
 	renderer.render (sceneHUD, cameraHUD);
 	
 	var dt = 0.1, maxangle = 1;
