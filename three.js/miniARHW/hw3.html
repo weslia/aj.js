@@ -105,6 +105,7 @@ function init() {
 		// antialias	: true,
 		alpha: true
 	});
+	renderer.autoClear = false;
 	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
 	// renderer.setPixelRatio( 1/2 );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -123,7 +124,7 @@ function init() {
 	
 	// Create a BASIC camera
 	camera = new THREE.Camera();
-	//scene.add(camera);
+	scene.add(camera);
 	// HUD
 	cameraHUD = new THREE.OrthographicCamera(-halfW, halfW, halfH, -halfH, -10, 10);
 	////////////////////////////////////////////////////////////////////////////////
