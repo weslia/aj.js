@@ -237,7 +237,7 @@ function animate() {
 	if( arToolkitSource.ready === false )	return
 	arToolkitContext.update( arToolkitSource.domElement );
 	
-	render.clear();
+	renderer.clear();
 	renderer.render (scene, camera);
 	button.mesh.meterial.visible = markerRoot.visible;
 	renderer.render (sceneHUD, cameraHUD);
