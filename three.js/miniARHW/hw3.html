@@ -287,7 +287,7 @@ function onMouseDown (event) {
 	mouse.y = event.clientY;
 	let buttonx = window.window.innerWidth/2+halfW/2;
 	let buttony = window.window.innerHeight/2-halfH/2;
-	console.log(mouse.x, mouse.y, buttonx, buttony)
+	console.log(mouse.x, mouse.y, buttonx, buttony, buttonSize)
 	if (mouse.x > buttonx + buttonSize/2 && mouse.x < buttonx - buttonSize/2) {
 		console.log ('picked')
 		rollable = !rollable;
