@@ -219,8 +219,8 @@ function addMarkerHiro(){
 	let circle2 = new THREE.Mesh( geometry2, material2 );
 	circle2.rotateX(-Math.PI/2);
 	markerRoot.add( circle2 );  
-	group.rotateX(-Math.PI/2);
-	  
+	
+	 
 	var geometry = new THREE.ConeGeometry( radius/4, radius/2, 4 );
 	var material = new THREE.MeshBasicMaterial( {color: 0xffffff });
 	var cone = new THREE.Mesh( geometry, material);
