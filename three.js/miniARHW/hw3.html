@@ -13,7 +13,7 @@
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <head>
-<title> miniAR HW02 </title>
+<title> miniAR HW03 </title>
 <style>
 #info {
   position: absolute;
@@ -192,8 +192,10 @@ function init() {
 	
 	var Device = !!navigator.platform.match(/iPhone|iPod|iPad|Android/)
 	if(Device){
+		$('#text').css ('color', 'white');
 		document.addEventListener('touchstart',onMouseDown,false);
 	}else{
+	console.log("not mobile")
 		window.addEventListener ('mousedown', onMouseDown, false);
 		window.addEventListener ('mouseup', onMouseUP, false);
 	}	
@@ -310,7 +312,7 @@ function onMouseDown (event) {
 function onMouseUP (event) {
 		rollable = false;
 }
-/*
+
 function touches (event) {
 	event.preventDefault();
 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -326,5 +328,5 @@ function touches (event) {
 	} else {
 		console.log ('no hit')
 	}
-}*/
+}
 </script></body>
