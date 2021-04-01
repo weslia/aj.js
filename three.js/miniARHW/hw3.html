@@ -69,6 +69,7 @@ var rollable = false, radius = 2.14;
 var angle = 0, omega = 0;
 var group;
 var mouse = new THREE.Vector2();
+var buttonSize = 10;
 
 // HUD
 var halfH = 10;
@@ -178,7 +179,7 @@ function init() {
 		//Function when reource is loaded
 		function(texture){
 		  //texture loaded then create button
-		  var buttonSize = 10//halfH/3;//radius
+		  //halfH/3;//radius
 		  button = new Button(halfW/2, -halfH/2, buttonSize, 'red', texture);
 		  sceneHUD.add(button.mesh);
 		},
