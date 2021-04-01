@@ -69,12 +69,13 @@ var rollable = false, radius = 2.14;
 var angle = 0, omega = 0;
 var group;
 var mouse = new THREE.Vector2();
-var buttonSize = 10;
+
 
 // HUD
 var halfH = 10;
 var whRatio = window.innerWidth / window.innerHeight;
 var halfW = halfH * whRatio;
+var buttonSize = halfH/3;
 class Button {
   constructor(cx, cy, size, colorString = 'yellow', map){
     this.centerX = cx;
