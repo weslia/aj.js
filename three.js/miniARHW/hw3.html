@@ -240,7 +240,7 @@ function animate() {
 	
 	renderer.clear();
 	renderer.render (scene, camera);
-	button.mesh.meterial.visible = markerRoot.visible;
+	button.mesh.meterial.visible = markerRoot.circle0.material0.visible;
 	renderer.render (sceneHUD, cameraHUD);
 	
 	var dt = 0.1, maxangle = 1;
