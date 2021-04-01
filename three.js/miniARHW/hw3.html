@@ -255,7 +255,8 @@ function animate() {
  
 	if(rollable){
 		
-		 omega += 6*dt;
+		//omega += 6*dt;
+		omega = 1;
 	  }else{
 		 omega -= 0.025*dt;
 	  }
@@ -300,6 +301,11 @@ function onMouseDown (event) {
 	} else {
 		console.log ('no hit')
 	}
+}
+
+window.addEventListener ('mouseup', onMouseUP, false);
+function onMouseUP (event) {
+		rollable = false;
 }
 
 </script></body>
