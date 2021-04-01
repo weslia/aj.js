@@ -179,7 +179,7 @@ function init() {
 		function(texture){
 		  //texture loaded then create button
 		  var buttonSize = 10//halfH/3;//radius
-		  button = new Button(0, 0, buttonSize, 'red', texture);
+		  button = new Button(halfW/2, -halfH/2, buttonSize, 'red', texture);
 		  sceneHUD.add(button.mesh);
 		},
 	);
@@ -283,9 +283,9 @@ function onMouseDown (event) {
 	event.preventDefault();
 	mouse.x = event.clientX;
 	mouse.y = event.clientY;
-	console.log(mouse.x)
-	console.log(mouse.y)
-	if (0) {
+	let buttonx = window.window.innerWidth/2+halfW/2;
+	let buttony = window.window.innerHeight/2-halfH/2;
+	if (mouse.x > buttonx + buttonSize/2 && mouse.x < buttonx - buttonSize/2) {
 		console.log ('picked')
 		rollable = !rollable;
 	} else {
