@@ -68,10 +68,11 @@ var markerRoot = new THREE.Group();
 var rollable = false, radius = 2.14;
 var angle = 0, omega = 0;
 var group;
+var mouse = new THREE.Vector2();
 
 // HUD
 var halfH = 10;
-var whRatio = $(window).width() / $(window).height();
+var whRatio = window.innerWidth / window.innerHeight;
 var halfW = halfH * whRatio;
 class Button {
   constructor(cx, cy, size, colorString = 'yellow', map){
@@ -177,8 +178,8 @@ function init() {
 		//Function when reource is loaded
 		function(texture){
 		  //texture loaded then create button
-		  var buttonSize = halfH/3;//radius
-		  button = new Button(halfW/2, -halfH/2, buttonSize, 'red', texture);
+		  var buttonSize = 10//halfH/3;//radius
+		  button = new Button(0, 0, buttonSize, 'red', texture);
 		  sceneHUD.add(button.mesh);
 		},
 	);
@@ -274,6 +275,22 @@ function clamp (x, xLo, xHi) {
 	if (x < xLo) return xLo;
   if (x > xHi) return xHi;
   else return x;
+}
+
+
+window.addEventListener ('mousedown', onMouseDown, false);
+function onMouseDown (event) {
+	event.preventDefault();
+	mouse.x = event.clientX;
+	mouse.y = event.clientY;
+	console.log(mouse.x)
+	console.log(mouse.y)
+	if (0) {
+		console.log ('picked')
+		rollable = !rollable;
+	} else {
+		console.log ('no hit')
+	}
 }
 
 </script></body>
