@@ -185,10 +185,11 @@ function init() {
 		  //halfH/3;//radius
 		  button = new Button(halfW/2, -halfH/2, buttonSize, 'red', texture);
 		  sceneHUD.add(button.mesh);
+		  pickables.push(button.mesh);
 		},
 	);
 	scene.add (markerHiro);
-	pickables.push (markerHiro);	
+		
 }
 	
 function addMarkerHiro(){
