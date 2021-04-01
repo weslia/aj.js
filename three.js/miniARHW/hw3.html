@@ -255,10 +255,9 @@ function animate() {
  
 	if(rollable){
 		
-		//omega += 6*dt;
-		omega = 1;
+		omega += 6*dt;
 	  }else{
-		 omega -= 0.025*dt;
+		 omega -= 0.5*dt;
 	  }
 	  omega = clamp (omega, 0, maxangle);
 	  angle += omega;
