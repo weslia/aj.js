@@ -73,7 +73,7 @@ var halfH = 10;
 var whRatio = $(window).width() / $(window).height();
 var halfW = halfH * whRatio;
 class Button {
-  constructor(cx, cy, size, colorString = 'yellow', map = null){
+  constructor(cx, cy, size, colorString = 'yellow', map){
     this.centerX = cx;
     this.centerY = cy;
     this.size = size; // circle radius
@@ -239,7 +239,7 @@ function animate() {
 	
 	renderer.clear();
 	renderer.render (scene, camera);
-	button.mesh.meterial.visible = markerHiro.visible;
+	button.mesh.meterial.visible = arToolkitSource.visible;
 	renderer.render (sceneHUD, cameraHUD);
 	
 	var dt = 0.1, maxangle = 1;
