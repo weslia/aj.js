@@ -206,11 +206,11 @@ function init() {
 	var IOS_device = !!navigator.platform.match(/iPhone|iPod|iPad/);
 	var And_device = !!navigator.platform.match(/Android/);
 	if(And_device){
-		$('#text2').html('<p id="text2" style ="color:red;text-align:center;margin-right:48%;margin-left:48%;background-color:888888;">IOS</p>');
+		$('#text2').css ('color', 'Blue');
 		document.addEventListener('touchstart',onMouseDown,false);
 		document.addEventListener('touchend',onMouseUP,false);
 	}else if(IOS_device){
-		$('#text2').html('<p id="text2" style ="color:red;text-align:center;margin-right:48%;margin-left:48%;background-color:888888;">Android</p>');
+		$('#text2').css ('color', 'Red');
 		document.addEventListener('touchstart',onMouseDown,false);
 		document.addEventListener('touchend',onMouseUP,false);
 	}else{
