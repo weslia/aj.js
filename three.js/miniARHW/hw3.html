@@ -190,12 +190,16 @@ function init() {
 	);
 	scene.add (markerHiro);
 	
-	
-	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+	if(!!navigator.platform.match(/Android/)){
+		$('#text').css ('color', 'yellow');
+		document.addEventListener('touchstart',onMouseDown,false);
+		document.addEventListener('touched',onMouseUP,false);
+	}else if(!!navigator.platform.match(/iPhone|iPod|iPad/)){
 		$('#text').css ('color', 'white');
 		document.addEventListener('touchstart',onMouseDown,false);
+		document.addEventListener('touched',onMouseUP,false);
 	}else{
-	console.log('not mobile')
+		console.log('not mobile')
 		window.addEventListener ('mousedown', onMouseDown, false);
 		window.addEventListener ('mouseup', onMouseUP, false);
 	}	
