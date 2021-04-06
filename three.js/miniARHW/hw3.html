@@ -37,6 +37,17 @@
   background-color: #888888;
 }
 
+#device{
+  position: absolute;
+  width: 30%;
+  top: 90px;
+  text-align: center;
+  font-size: 40px;
+  line-height: 10px;
+  color: #ffff00;
+  background-color: #888888;
+}
+
 body {
   overflow: hidden;
   margin: 0px;
@@ -52,9 +63,11 @@ body {
 </div>
 
 <div id="spinner">
-  <p id="text" style ="color:red">color</p>
+  <p id="text">color</p>
 </div>
-
+<div id="device">
+  <p id="text2">device</p>
+</div>
 
 <script>
 
@@ -190,14 +203,16 @@ function init() {
 	);
 	scene.add (markerHiro);
 	
-	if(!!navigator.platform.match(/Android/)){
-		$('#text').css ('color', 'yellow');
+	var IOS_device = !!navigator.platform.match(/iPhone|iPod|iPad/);
+	var And_device = !!navigator.platform.match(/Android/);
+	if(And_device){
+		$('#text2').html('<p id="text2" style ="color:red;text-align:center;margin-right:48%;margin-left:48%;background-color:888888;">IOS</p>');
 		document.addEventListener('touchstart',onMouseDown,false);
-		document.addEventListener('touched',onMouseUP,false);
-	}else if(!!navigator.platform.match(/iPhone|iPod|iPad/)){
-		$('#text').css ('color', 'white');
+		document.addEventListener('touchend',onMouseUP,false);
+	}else if(IOS_device){
+		$('#text2').html('<p id="text2" style ="color:red;text-align:center;margin-right:48%;margin-left:48%;background-color:888888;">Android</p>');
 		document.addEventListener('touchstart',onMouseDown,false);
-		document.addEventListener('touched',onMouseUP,false);
+		document.addEventListener('touchend',onMouseUP,false);
 	}else{
 		console.log('not mobile')
 		window.addEventListener ('mousedown', onMouseDown, false);
