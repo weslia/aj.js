@@ -207,12 +207,12 @@ function init() {
 	var And_device = !!navigator.platform.match(/Android/);
 	if(And_device){
 		$('#text2').css ('color', 'Blue');
-		document.addEventListener('touchstart',onMouseDown,false);
-		document.addEventListener('touchend',onMouseUP,false);
+		document.addEventListener('touchstart',onTouchStart,false);
+		document.addEventListener('touchend',onTouchEnd,false);
 	}else if(IOS_device){
 		$('#text2').css ('color', 'Red');
-		document.addEventListener('touchstart',onMouseDown,false);
-		document.addEventListener('touchend',onMouseUP,false);
+		document.addEventListener('touchstart',onTouchStart,false);
+		document.addEventListener('touchend',onTouchEnd,false);
 	}else{
 		console.log('not mobile')
 		window.addEventListener ('mousedown', onMouseDown, false);
@@ -332,20 +332,31 @@ function onMouseUP (event) {
 		rollable = false;
 }
 
-function touches (event) {
+function onTouchStart (event) {
 	event.preventDefault();
-	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {
+		mouse.x = (touches[i].pageX / window.innerWidth) * 2 - 1;
+		mouse.y = -(touches[i].pageY / window.innerHeight) * 2 + 1;
+		
+		// find intersections (only pick the HUD scene, using OrthographicCamera)  		
+		raycaster.setFromCamera(mouse, cameraHUD);
+					
+		var intersects = raycaster.intersectObjects(pickables);
+		
+		if (intersects.length > 0) {
+			rollable = true;
+		} else {
+			rollable = false;
+		}
+	}
+}
 
-	// find intersections (only pick the HUD scene, using OrthographicCamera)  		
-	raycaster.setFromCamera(mouse, cameraHUD);
-				
-	var intersects = raycaster.intersectObjects(pickables);
-	if (intersects.length > 0) {
-		console.log ('picked')
-		rollable = !rollable;
-	} else {
-		console.log ('no hit')
+function onTouchEnd (event) {
+	event.preventDefault();
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {
+		rollable = false;
 	}
 }
 </script></body>
