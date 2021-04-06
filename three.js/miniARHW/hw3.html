@@ -202,9 +202,8 @@ function init() {
 		},
 	);
 	scene.add (markerHiro);
-	
+	var And_device = !!navigator.platform.match(/Android/ig);
 	var IOS_device = !!navigator.platform.match(/iPhone|iPod|iPad/);
-	var And_device = !!navigator.platform.match(/Android/);
 	if(And_device){
 		$('#text2').css ('color', 'Blue');
 		document.addEventListener('touchstart',onTouchStart,false);
