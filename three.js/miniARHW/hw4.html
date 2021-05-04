@@ -155,9 +155,9 @@ function animate() {
 	/////////////////////////////////////
 	keyboardUpdate();
   
-	barrelPart.remove(points);
+	cannon.remove(points);
 	points = makeProjectile ( 10, Math.PI/2 + barrel.rotation.z);
-	barrelPart.add (points);
+	cannon.add (points);
 	
 	if (pos === undefined) {
 		computeInitPosVel();
