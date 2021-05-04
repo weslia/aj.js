@@ -59,8 +59,7 @@ function init() {
 		// antialias	: true,
 		alpha: true
 	});
-	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-	// renderer.setPixelRatio( 1/2 );
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0);
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.domElement.style.position = 'absolute'
 	renderer.domElement.style.top = '0px'
@@ -123,8 +122,8 @@ function init() {
 	clock = new THREE.Clock();
 	nowPos = new THREE.Vector3();
 	prePos = new THREE.Vector3();
-	prePos.copy(barrel.localToWorld (new THREE.Vector3(0,18,0)));
-	barrel = cannon.children[1]
+	prePos.copy(barrel.localToWorld (new THREE.Vector3(0,1.8,0)));
+	barrel = cannon.children[1];
 	barrel.rotation.z = -Math.PI/6; // barrel angle
 	cannon.rotation.y = 0;
 	
@@ -139,7 +138,7 @@ function addMarkerHiro(){
 	})
 	cannon = makeCannon();
 	markerRoot.add (cannon);
-	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.52,2,5,20), new THREE.MeshNormalMaterial());
+	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
 	markerRoot.add (ball);
 			
 	return markerRoot;
@@ -157,7 +156,7 @@ function animate() {
 	keyboardUpdate();
   
 	markerHiro.remove(points);
-	points = makeProjectile ( 30, Math.PI/2 + barrel.rotation.z);
+	points = makeProjectile ( 10, Math.PI/2 + barrel.rotation.z);
 	markerHiro.add (points);
 	
 	if (pos === undefined) {
@@ -180,20 +179,20 @@ function animate() {
 
 function makeCannon() {
 	let cannon = new THREE.Group();
-	let body = new THREE.Mesh (new THREE.SphereGeometry(10,20,20, Math.PI+Math.PI*0.1,Math.PI*1.8,0,Math.PI/2), new THREE.MeshNormalMaterial());
+	let body = new THREE.Mesh (new THREE.SphereGeometry(1,20,20, Math.PI+Math.PI*0.1,Math.PI*1.8,0,Math.PI/2), new THREE.MeshNormalMaterial());
 	barrelPart = new THREE.Group();
-	barrel = new THREE.Mesh (new THREE.CylinderGeometry(2,2,20,18), new THREE.MeshNormalMaterial());
+	barrel = new THREE.Mesh (new THREE.CylinderGeometry(0.2,0.2,2,18), new THREE.MeshNormalMaterial());
 	barrelPart.add (barrel);
-	barrel.position.y = 10;
+	barrel.position.y = 1;
 	cannon.add (body, barrelPart);
 	return cannon;
 }
 function computeInitPosVel() {
 	barrel = cannon.children[1];
 	const SPEED = 30;
-	vel = barrel.localToWorld (new THREE.Vector3(0,20,0)).sub (
+	vel = barrel.localToWorld (new THREE.Vector3(0,2,0)).sub (
 	barrel.localToWorld (new THREE.Vector3(0,0,0))).setLength (SPEED);
-	pos = barrel.localToWorld (new THREE.Vector3(0,22,0));
+	pos = barrel.localToWorld (new THREE.Vector3(0,2.2,0));
 	force = new THREE.Vector3(0,-10.275,0);
 }
 function keyboardUpdate(){
