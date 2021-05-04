@@ -44,7 +44,7 @@ var arToolKitSource, arToolKitContext;
 var markerHiro;
 //////////////////////////////////////////////////
 var keyboard = new KeyboardState();
-var cannon, VerticalAngle, HorizontalAngle, barrel;
+var cannon, VerticalAngle, HorizontalAngle, barrel, barrelPart;
 var clock;
 var ball, line = new THREE.Group(), points;
 var pos, vel, force;
@@ -155,9 +155,9 @@ function animate() {
 	/////////////////////////////////////
 	keyboardUpdate();
   
-	markerHiro.remove(points);
+	barrelPart.remove(points);
 	points = makeProjectile ( 10, Math.PI/2 + barrel.rotation.z);
-	markerHiro.add (points);
+	barrelPart.add (points);
 	
 	if (pos === undefined) {
 		computeInitPosVel();
