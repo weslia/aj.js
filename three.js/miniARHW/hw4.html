@@ -140,7 +140,10 @@ function addMarkerHiro(){
 	markerRoot.add (cannon);
 	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
 	markerRoot.add (ball);
-			
+	
+	points = makeProjectile ( 10, Math.PI/2 + barrel.rotation.z);
+	markerRoot.add (points);
+
 	return markerRoot;
 }	
 
