@@ -239,7 +239,7 @@ function makeParabola (a, b, c) {
 		xi = x0 + i*dx;
 		yi = a*(xi-b)*(xi-b) + c;
 		let temp = new THREE.Vector3(xi,yi,0);
-		points.push (temp.add(barrelPart.localToWorld (new THREE.Vector3(0,20,0))));
+		points.push (temp.add(barrelPart.localToWorld (new THREE.Vector3(0,2,0))));
 	}
 	
 	let geometry = new THREE.BufferGeometry().setFromPoints(points);
