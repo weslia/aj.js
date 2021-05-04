@@ -141,9 +141,6 @@ function addMarkerHiro(){
 	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
 	markerRoot.add (ball);
 	
-	points = makeProjectile ( 10, Math.PI/2 + barrel.rotation.z);
-	markerRoot.add (points);
-
 	return markerRoot;
 }	
 
@@ -172,6 +169,7 @@ function animate() {
 	}
 	// Euler's method
 	let dt = clock.getDelta();
+	force.add(new THREE.Vector3(0,0,1));
 	vel.add (force.clone().multiplyScalar(dt));
 	pos.add (vel.clone().multiplyScalar(dt));
 	ball.position.copy (pos);
