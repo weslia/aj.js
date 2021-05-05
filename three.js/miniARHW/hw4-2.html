@@ -273,14 +273,14 @@ function onMouseDown (event) {
 				
 	var intersects = raycaster.intersectObjects(pickables);
 	if (intersects.length > 0) {
-		setTimeout(spirteAnimate, 0);
+		setTimeout(spriteAnimate, 0);
 	} else {
-		console.log ('no hit')
+		console.log ('no hit');
 	}
 }
 
 function onMouseUP (event) {
-		rollable = false;
+	rollable = false;
 }
 
 function onTouchStart (event) {
@@ -296,7 +296,7 @@ function onTouchStart (event) {
 		var intersects = raycaster.intersectObjects(pickables);
 		
 		if (intersects.length > 0) {
-			setTimeout(spirteAnimate, 0);
+			setTimeout(spriteAnimate, 0);
 		} else {
 			rollable = false;
 		}
