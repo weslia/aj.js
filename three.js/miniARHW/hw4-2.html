@@ -259,7 +259,6 @@ function onMouseDown (event) {
 }
 
 function onMouseUP (event) {
-	rollable = false;
 }
 
 function onTouchStart (event) {
@@ -277,7 +276,7 @@ function onTouchStart (event) {
 		if (intersects.length > 0) {
 			setTimeout(spriteAnimate, 0);
 		} else {
-			rollable = false;
+			
 		}
 	}
 }
@@ -285,8 +284,5 @@ function onTouchStart (event) {
 function onTouchEnd (event) {
 	event.preventDefault();
 	var touches = event.changedTouches;
-	for (var i = 0; i < touches.length; i++) {
-		rollable = false;
-	}
 }
 </script></body>
