@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<!-- three.js library -->
+<script src='../examples/vendor/three.js/build/three.min.js'></script>
+<script src="../examples/vendor/three.js/examples/js/libs/stats.min.js"></script>
+<!-- ar.js -->
+<script src="../build/ar.js"></script>
+<script>THREEx.ArToolkitContext.baseURL = '../'</script>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js">
+</script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="explode.js"></script>
+
+<head>
+<title> miniAR HW03 </title>
+<style>
+#info {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  z-index: 0;
+  color: #ffff00;
+}
+
+#spinner{
+  position: absolute;
+  width: 30%;
+  top: 60px;
+  text-align: center;
+  font-size: 40px;
+  line-height: 10px;
+  z-index: -1;
+  color: #ffff00;
+  background-color: #888888;
+}
+
+#device{
+  position: absolute;
+  width: 30%;
+  top: 120px;
+  text-align: center;
+  font-size: 40px;
+  line-height: 10px;
+  color: #ffff00;
+  background-color: #888888;
+}
+
+body {
+  overflow: hidden;
+  margin: 0px;
+  font-family: Monospace;
+}
+</style>
+</head>
+
+<body>
+<div id="info">
+<a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
+	miniARHW HW04-2
+</div>
+
+<div id="spinner">
+  <p id="text">color</p>
+</div>
+<div id="device">
+  <p id="text2">device</p>
+</div>
+
+<script>
+
+// global variables
+var renderer, scene, camera;
+var stats;
+var arToolKitSource, arToolKitContext;
+var markerHiro;
+var markerRoot = new THREE.Group();
+//--------------------------
+var mouse = new THREE.Vector2();
+
+
+// HUD
+var raycaster = new THREE.Raycaster();
+var pickables = [];
+var halfH = 10;
+var whRatio = window.innerWidth / window.innerHeight;
+var halfW = halfH * whRatio;
+var buttonSize = halfH/3;
+class Button {
+  constructor(cx, cy, size, colorString = 'yellow', map){
+    this.centerX = cx;
+    this.centerY = cy;
+    this.size = size; // circle radius
+    let material = new THREE.MeshBasicMaterial({color: colorString, transparent: true, opacity:0.7});
+
+    if(map)
+      material.map = map;
+    this.mesh = new THREE.Mesh(new THREE.CircleGeometry(size, 36), material);
+    this.mesh.position.set(cx, cy, 0);
+  }
+
+  setLocation(lx, ly){
+    this.mesh.position.set(lx, ly, 0);
+  }
+
+  d2To(v){
+    return Math.sqrt((v[0]-this.centerX)*(v[0]-this.centerX) + (v[1]-this.centerY)*(v[1]-this.centerY));
+  }
+}
+
+init();
+animate();
+
+function init() {
+	
+	// init renderer
+	renderer	= new THREE.WebGLRenderer({
+		// antialias	: true,
+		alpha: true
+	});
+	renderer.autoClear = false;
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	// renderer.setPixelRatio( 1/2 );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	document.body.appendChild( renderer.domElement );
+
+	stats = new Stats();
+	document.body.appendChild( stats.dom );
+
+	// init scene and camera
+	scene	= new THREE.Scene();
+	// HUD
+	sceneHUD = new THREE.Scene();
+	
+	// Create a BASIC camera
+	camera = new THREE.Camera();
+	scene.add(camera);
+	// HUD
+	cameraHUD = new THREE.OrthographicCamera(-halfW, halfW, halfH, -halfH, -10, 10);
+	////////////////////////////////////////////////////////////////////////////////
+	//          handle arToolkitSource
+	////////////////////////////////////////////////////////////////////////////////
+
+	arToolkitSource = new THREEx.ArToolkitSource({
+		// to read from the webcam 
+		sourceType : 'webcam',
+	})
+
+	arToolkitSource.init(function onReady(){
+		onResize()
+	})
+	
+	// handle resize
+	window.addEventListener('resize', function(){
+		onResize()
+	})
+	function onResize(){
+		arToolkitSource.onResize()	
+		arToolkitSource.copySizeTo(renderer.domElement)	
+		if( arToolkitContext.arController !== null ){
+			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+		}	
+	}
+	////////////////////////////////////////////////////////////////////////////////
+	//          initialize arToolkitContext
+	////////////////////////////////////////////////////////////////////////////////
+	
+	arToolkitContext = new THREEx.ArToolkitContext({
+		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+		detectionMode: 'mono',
+		maxDetectionRate: 30,
+		canvasWidth: 80*3,
+		canvasHeight: 60*3,
+	})
+	// initialize it
+	arToolkitContext.init(function onCompleted(){
+		// copy projection matrix to camera
+		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	})
+	markerHiro = addMarkerHiro();
+	//HUD
+	let loader = new THREE.TextureLoader();
+	loader.setCrossOrigin('');//importent!!!!!
+	loader.load(
+		//resource URL
+		'https://i.imgur.com/b6I5kb7.png',
+		//Function when reource is loaded
+		function(texture){
+		  //texture loaded then create button
+		  //halfH/3;//radius
+		  button = new Button(halfW/2, -halfH/2, buttonSize, 'yellow', texture);
+		  sceneHUD.add(button.mesh);
+		  pickables.push(button.mesh);
+		},
+	);
+	scene.add (markerHiro);
+    initSprite(markerHiro);
+
+	var ua = navigator.userAgent.toLowerCase();
+	var isAndroid = ua.indexOf("android") > -1;
+	var And_device = !!navigator.platform.match(/Android9/);
+	var IOS_device = !!navigator.platform.match(/iPhone|iPod|iPad/);
+	if(isAndroid){
+		$('#text2').css ('color', 'Blue');
+		document.addEventListener('touchstart',onTouchStart,false);
+		document.addEventListener('touchend',onTouchEnd,false);
+	}else if(IOS_device){
+		$('#text2').css ('color', 'Red');
+		document.addEventListener('touchstart',onTouchStart,false);
+		document.addEventListener('touchend',onTouchEnd,false);
+	}else{
+		console.log('not mobile')
+		window.addEventListener ('mousedown', onMouseDown, false);
+		window.addEventListener ('mouseup', onMouseUP, false);
+	}	
+}
+	
+function addMarkerHiro(){
+	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+		type : 'pattern',
+		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/bombTarget.patt'
+	})
+	//---------------------------------------------------------------------
+    let loader = new THREE.TextureLoader();
+	loader.setCrossOrigin('')
+	let texture = loader.load( 'https://i.imgur.com/sFfSAYH.png?1' );
+	let geometry = new THREE.PlaneGeometry(1, 1);
+    let material = new THREE.MeshBasicMaterial( { 
+		map: texture,
+		//color: 0xffff00,
+		side: THREE.DoubleSide
+    } );
+    let plane = new THREE.Mesh( geometry, material );
+    scene.add( plane );
+	
+	return markerRoot;
+}	
+
+function animate() {
+	
+	requestAnimationFrame (animate);
+	stats.update();
+	
+	if( arToolkitSource.ready === false )	return;
+	arToolkitContext.update( arToolkitSource.domElement );
+	
+	renderer.clear();
+	renderer.render (scene, camera);
+	button.mesh.material.visible = markerRoot.visible;
+	renderer.render (sceneHUD, cameraHUD);
+		
+}
+
+function clamp (x, xLo, xHi) {
+	if (x < xLo) return xLo;
+  if (x > xHi) return xHi;
+  else return x;
+}
+
+function onMouseDown (event) {
+	event.preventDefault();
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	// find intersections (only pick the HUD scene, using OrthographicCamera)  		
+	raycaster.setFromCamera(mouse, cameraHUD);
+				
+	var intersects = raycaster.intersectObjects(pickables);
+	if (intersects.length > 0) {
+		setTimeout(spirteAnimate, 0);
+	} else {
+		console.log ('no hit')
+	}
+}
+
+function onMouseUP (event) {
+		rollable = false;
+}
+
+function onTouchStart (event) {
+	event.preventDefault();
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {
+		mouse.x = (touches[i].pageX / window.innerWidth) * 2 - 1;
+		mouse.y = -(touches[i].pageY / window.innerHeight) * 2 + 1;
+		
+		// find intersections (only pick the HUD scene, using OrthographicCamera)  		
+		raycaster.setFromCamera(mouse, cameraHUD);
+					
+		var intersects = raycaster.intersectObjects(pickables);
+		
+		if (intersects.length > 0) {
+			setTimeout(spirteAnimate, 0);
+		} else {
+			rollable = false;
+		}
+	}
+}
+
+function onTouchEnd (event) {
+	event.preventDefault();
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {
+		rollable = false;
+	}
+}
+</script></body>

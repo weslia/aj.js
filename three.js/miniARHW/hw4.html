@@ -155,9 +155,9 @@ function animate() {
 	/////////////////////////////////////
 	keyboardUpdate();
   
-	cannon.remove(points);
+	markerRoot.remove(points);
 	points = makeProjectile ( 10, Math.PI/2 + barrel.rotation.z);
-	cannon.add (points);
+	markerRoot.add (points);
 	
 	if (pos === undefined) {
 		computeInitPosVel();
@@ -236,7 +236,7 @@ function makeParabola (a, b, c) {
 	for (let i = 0; i <= N; i++) {
 		xi = x0 + i*dx;
 		yi = a*(xi-b)*(xi-b) + c;
-		let temp = new THREE.Vector3(xi,yi,0);
+		let temp = new THREE.Vector3(xi*Math.cos(cannon.rotation.y),yi,-xi*Math.sin(cannon.rotation.y));
 		points.push (temp.add(barrelPart.localToWorld (new THREE.Vector3(0,2,0))));
 	}
 	
