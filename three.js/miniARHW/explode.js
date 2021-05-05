@@ -23,6 +23,7 @@ function buildSprite(texMat, markerGroup) {
     geometry.computeVertexNormals();
 
     sprite = new THREE.Mesh(geometry, texMat);
+    sprite.position.set(0,2,0);
     markerGroup.add(sprite);
 }
 
