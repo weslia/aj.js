@@ -109,7 +109,6 @@ function init() {
 	
 	// Create a BASIC camera
 	camera = new THREE.Camera();
-	
 	scene.add(camera);
 	// HUD
 	cameraHUD = new THREE.OrthographicCamera(-halfW, halfW, halfH, -halfH, -10, 10);
@@ -171,7 +170,7 @@ function init() {
 	);
 	scene.add (markerHiro);
     initSprite(markerHiro);
-
+	
 	var ua = navigator.userAgent.toLowerCase();
 	var isAndroid = ua.indexOf("android") > -1;
 	var And_device = !!navigator.platform.match(/Android9/);
@@ -196,8 +195,7 @@ function addMarkerHiro(){
 		type : 'pattern',
 		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/bombTarget.patt'
 	})
-	//---------------------------------------------------------------------
-    let loader = new THREE.TextureLoader();
+	let loader = new THREE.TextureLoader();
 	loader.setCrossOrigin('')
 	let texture = loader.load( 'https://i.imgur.com/sFfSAYH.png?1' );
 	let geometry = new THREE.PlaneGeometry(1, 1);
@@ -207,8 +205,7 @@ function addMarkerHiro(){
 		side: THREE.DoubleSide
     } );
     let plane = new THREE.Mesh( geometry, material );
-    scene.add( plane );
-	
+    markerRoot.add( plane );
 	return markerRoot;
 }	
 
@@ -227,14 +224,13 @@ function animate() {
 
 	let localCamera = markerHiro.worldToLocal (new THREE.Vector3(0,0,0))
 	// CYLINDRICAL billboard:
-	localCamera.y = 0;
 	
 	// to rotate (0,0,1) to localCamera [markerCoord]
 	let point = new THREE.Vector3(0,0,1);
 	let angle = point.angleTo (localCamera);
 	let axis = new THREE.Vector3();
 	axis.crossVectors(point, localCamera).normalize(); // normalization is IMPORTANT!
-	let hulkGroup = markerHiro.children[0];
+	let hulkGroup = markerHiro.children[1];
 	hulkGroup.quaternion.setFromAxisAngle (axis, angle);
 		
 }
