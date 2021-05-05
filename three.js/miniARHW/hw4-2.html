@@ -197,7 +197,7 @@ function addMarkerHiro(){
 	})
 	let loader = new THREE.TextureLoader();
 	loader.setCrossOrigin('')
-	let texture = loader.load( 'https://i.imgur.com/sFfSAYH.png?1' );
+	let texture = loader.load( 'https://i.imgur.com/FoevTzs.png' );
 	let geometry = new THREE.PlaneGeometry(1, 1);
     let material = new THREE.MeshBasicMaterial( { 
 		map: texture,
@@ -205,6 +205,7 @@ function addMarkerHiro(){
 		side: THREE.DoubleSide
     } );
     let plane = new THREE.Mesh( geometry, material );
+	plane.rotate.x = Math.PI/2;
     markerRoot.add( plane );
 	return markerRoot;
 }	
