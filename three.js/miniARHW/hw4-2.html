@@ -26,29 +26,6 @@
   color: #ffff00;
 }
 
-#spinner{
-  position: absolute;
-  width: 30%;
-  top: 60px;
-  text-align: center;
-  font-size: 40px;
-  line-height: 10px;
-  z-index: -1;
-  color: #ffff00;
-  background-color: #888888;
-}
-
-#device{
-  position: absolute;
-  width: 30%;
-  top: 120px;
-  text-align: center;
-  font-size: 40px;
-  line-height: 10px;
-  color: #ffff00;
-  background-color: #888888;
-}
-
 body {
   overflow: hidden;
   margin: 0px;
@@ -61,13 +38,6 @@ body {
 <div id="info">
 <a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
 	miniARHW HW04-2
-</div>
-
-<div id="spinner">
-  <p id="text">color</p>
-</div>
-<div id="device">
-  <p id="text2">device</p>
 </div>
 
 <script>
@@ -207,11 +177,11 @@ function init() {
 	var And_device = !!navigator.platform.match(/Android9/);
 	var IOS_device = !!navigator.platform.match(/iPhone|iPod|iPad/);
 	if(isAndroid){
-		$('#text2').css ('color', 'Blue');
+		
 		document.addEventListener('touchstart',onTouchStart,false);
 		document.addEventListener('touchend',onTouchEnd,false);
 	}else if(IOS_device){
-		$('#text2').css ('color', 'Red');
+		
 		document.addEventListener('touchstart',onTouchStart,false);
 		document.addEventListener('touchend',onTouchEnd,false);
 	}else{
