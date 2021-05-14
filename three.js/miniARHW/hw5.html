@@ -189,13 +189,13 @@ function animate() {
 	renderer.clear();
 	renderer.render (scene, camera);
 	/////////////////////////////////////
-	markerHiro.remove(points);
+	
 	computeProjectile();
-	scene.remove (markerHiro.getObjectByName('projectile'));
+	markerHiro.remove (markerHiro.getObjectByName('projectile'));
 	if(far == 1){
 		points = makeProjectile ();
 		points.name = 'projectile';
-		scene.add (points);
+		markerHiro.add (points);
 		let q3 = new THREE.Quaternion();
 		q3.setFromUnitVectors(new THREE.Vector3(1, 0, 0), cannon.localToWorld (new THREE.Vector3(1,0,0)).normalize());
 		points.quaternion.copy (q3);
