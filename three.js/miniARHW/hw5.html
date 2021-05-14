@@ -206,18 +206,7 @@ function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
 	
-	target = markerBoom.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0)));
-	var intersects = raycaster.intersectObjects(pickables);
-	if (intersects.length > 0) {
-		target.copy(intersects[0].point);
-		targetBall.position.copy(target);
-		theta = Math.PI/2 + barrel.rotation.z;
-		q1.copy(q2);  // save current (old) orientation
-		q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
-		//console.log(target.length());
-		counterN = 100;
-		counter = 0;
-	}
+	
 
 	if( arToolkitSource.ready === false )	return
 	arToolkitContext.update( arToolkitSource.domElement )
@@ -251,9 +240,17 @@ function animate() {
 		console.log(ballout);
 		++counter;
 	}else{
-		if(ballout == 1){
-		ballout = 0; 
-		console.log(ballout);
+		target = markerBoom.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0)));
+		var intersects = raycaster.intersectObjects(pickables);
+		if (intersects.length > 0) {
+			target.copy(intersects[0].point);
+			targetBall.position.copy(target);
+			theta = Math.PI/2 + barrel.rotation.z;
+			q1.copy(q2);  // save current (old) orientation
+			q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
+			//console.log(target.length());
+			counterN = 100;
+			counter = 0;
 		}
 	}
 
