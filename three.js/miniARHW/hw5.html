@@ -34,7 +34,7 @@ body {
 <body>
 <div id="info">
 <a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
-	miniARHW HW04<br>
+	miniARHW HW05<br>
 	Cannon Firing<br>
 	<p id='msg'></p>
 </div>
@@ -158,7 +158,7 @@ function addMarkerHiro(){
 		transparent: true,
 		opacity: 0.3
 	}));
-	markerHiro.add(plane);
+	markerRoot.add(plane);
 	plane.rotation.x = -Math.PI / 2;
 	pickables.push(plane);
 	document.addEventListener('pointerdown', onDocumentMouseDown, false);
@@ -168,7 +168,7 @@ function addMarkerHiro(){
 		color: 'cyan',
 		wireframe: true
 	}));
-	markerHiro.add(targetBall);
+	markerRoot.add(targetBall);
 	target = new THREE.Vector3(10, 0, 0);
 	targetBall.position.copy(target);
 
