@@ -155,7 +155,6 @@ function addMarkerBoom(){
     markerRoot.add( plane );
 	return markerRoot;
 }
-	
 function addMarkerHiro(){
 	let markerRoot = new THREE.Group()
 
@@ -203,11 +202,12 @@ function addMarkerHiro(){
 	computeProjectile();
 	return markerRoot;
 }	
-
 function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
 	
+	target = markerBoom.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0)));
+
 	if( arToolkitSource.ready === false )	return
 	arToolkitContext.update( arToolkitSource.domElement )
 	renderer.clear();
