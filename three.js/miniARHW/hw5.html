@@ -196,9 +196,11 @@ function animate() {
 		points = makeProjectile ();
 		points.name = 'projectile';
 		markerHiro.add (points);
+		/*
 		let q3 = new THREE.Quaternion();
 		q3.setFromUnitVectors(new THREE.Vector3(1, 0, 0), markerHiro.localToWorld(cannon.localToWorld (new THREE.Vector3(1,0,0))).normalize());
 		points.quaternion.copy (q3);
+		*/
 	}
 
 	if (counter < counterN) {
