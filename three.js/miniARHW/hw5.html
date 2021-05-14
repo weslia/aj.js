@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+
+<head>
+<title> miniAR HW05 </title>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00
+}
+
+body {
+  overflow: hidden;
+}
+
+</style>
+</head>
+
+<body>
+<div id="info">
+<a href="https://github.com/weslia/ar.js" target="_blank">ar.js</a> - three.js<br>
+	miniARHW HW04<br>
+	Cannon Firing<br>
+	<p id='msg'></p>
+</div>
+
+<script>
+// global variables
+var renderer, scene, camera;
+var stats;
+var arToolKitSource, arToolKitContext;
+var markerHiro;
+/////////////////////////////////////////////////
+var cannon, VerticalAngle, HorizontalAngle, barrel;
+var clock;
+var ball, line = new THREE.Group(), points;
+var pos, vel, force;
+var nowPos, prePos;
+/////////////////////
+var counter, counterN;
+var pickables = [], mouse, raycaster;
+var target, targetBall;
+var q1, q2;
+var v = 10, g = 10, theta;
+var far, ballout = 0;
+
+init();
+animate();
+
+function init() {
+	// init renderer
+	renderer	= new THREE.WebGLRenderer({
+		// antialias	: true,
+		alpha: true
+	});
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0);
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	document.body.appendChild( renderer.domElement );
+
+	stats = new Stats();
+	document.body.appendChild( stats.dom );
+
+	// init scene and camera
+	scene	= new THREE.Scene();
+	
+	// Create a BASIC camera
+	camera = new THREE.Camera();
+	scene.add(camera);
+
+	////////////////////////////////////////////////////////////////////////////////
+	//          handle arToolkitSource
+	////////////////////////////////////////////////////////////////////////////////
+
+	arToolkitSource = new THREEx.ArToolkitSource({
+		// to read from the webcam 
+		sourceType : 'webcam',
+	})
+
+	arToolkitSource.init(function onReady(){
+		onResize()
+	})
+	
+	// handle resize
+	window.addEventListener('resize', function(){
+		onResize()
+	})
+	function onResize(){
+		arToolkitSource.onResize()	
+		arToolkitSource.copySizeTo(renderer.domElement)	
+		if( arToolkitContext.arController !== null ){
+			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+		}	
+	}
+	////////////////////////////////////////////////////////////////////////////////
+	//          initialize arToolkitContext
+	////////////////////////////////////////////////////////////////////////////////
+	
+	arToolkitContext = new THREEx.ArToolkitContext({
+		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+		detectionMode: 'mono',
+		maxDetectionRate: 30,
+		canvasWidth: 80*3,
+		canvasHeight: 60*3,
+	})
+	// initialize it
+	arToolkitContext.init(function onCompleted(){
+		// copy projection matrix to camera
+		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	})
+	markerHiro = addMarkerHiro();
+	scene.add (markerHiro); 
+	//////////// settings /////////////////////////////////////////////
+	ccannon = makeCannon();
+	markerHiro.add (cannon);
+	//ball = new THREE.Mesh (new THREE.SphereGeometry(2,8,8), new THREE.MeshBasicMaterial({color:'yellow',wireframe:true}));
+	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
+	markerHiro.add (ball);
+	nowPos = new THREE.Vector3();
+	prePos = new THREE.Vector3();
+	prePos.copy(barrel.localToWorld (new THREE.Vector3(0,1.8,0)));
+	clock = new THREE.Clock();
+	//// settings //////////////////////
+	barrel = cannon.children[1]
+	barrel.rotation.z = -Math.PI/6; // barrel angle
+	cannon.rotation.y = 0;
+	////////////////////////////////////////////////
+	mouse = new THREE.Vector2();
+	var plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({
+		color: 'pink',
+		transparent: true,
+		opacity: 0.3
+	}));
+	markerHiro.add(plane);
+	plane.rotation.x = -Math.PI / 2;
+	pickables.push(plane);
+	document.addEventListener('pointerdown', onDocumentMouseDown, false);
+	raycaster = new THREE.Raycaster();
+	///////////////////////////////////////////////////////////
+	targetBall = new THREE.Mesh(new THREE.OctahedronGeometry(0.5), new THREE.MeshBasicMaterial({
+		color: 'cyan',
+		wireframe: true
+	}));
+	markerHiro.add(targetBall);
+	target = new THREE.Vector3(10, 0, 0);
+	targetBall.position.copy(target);
+
+	//////////////////////////
+	q1 = new THREE.Quaternion(); // null rotation
+	q2 = new THREE.Quaternion();
+	///////////////////////////////
+	computeProjectile();
+	
+}
+	
+function addMarkerHiro(){
+	let markerRoot = new THREE.Group()
+
+	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+		type : 'pattern',
+		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
+	})
+	cannon = makeCannon();
+	markerRoot.add (cannon);
+	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
+	markerRoot.add (ball);
+	
+	return markerRoot;
+}	
+
+function animate() {
+	requestAnimationFrame (animate);
+	stats.update();
+	
+	if( arToolkitSource.ready === false )	return
+	arToolkitContext.update( arToolkitSource.domElement )
+	renderer.clear();
+	renderer.render (scene, camera);
+	/////////////////////////////////////
+	markerHiro.remove(points);
+	computeProjectile();
+	markerHiro.remove (markerHiro.getObjectByName('projectile'));
+	if(far == 1){
+		points = makeProjectile ();
+		points.name = 'projectile';
+		markerHiro.add (points);
+		let q3 = new THREE.Quaternion();
+		q3.setFromUnitVectors(new THREE.Vector3(1, 0, 0), cannon.localToWorld (new THREE.Vector3(1,0,0)).normalize());
+		points.quaternion.copy (q3);
+	}
+
+	if (counter < counterN) {
+		computeInitPosVel();
+		markerHiro.remove (ball);
+		markerHiro.add (ball);
+
+		let alpha = counter / counterN;
+		let qm = q1.clone();
+
+		qm.slerp(q2, alpha);
+		cannon.quaternion.copy(qm);
+		console.log(ballout);
+		++counter;
+	}else{
+		if(ballout == 1){
+		ballout = 0; 
+		console.log(ballout);
+		}
+	}
+
+	if (pos === undefined) {
+		computeInitPosVel();
+		return;
+	}
+
+	if (pos.y < 0){
+		markerHiro.remove (ball);
+		return;
+	}
+	// Euler's method
+	let dt = clock.getDelta();
+	vel.add (force.clone().multiplyScalar(dt));
+	pos.add (vel.clone().multiplyScalar(dt));
+	ball.position.copy (pos);
+	prePos.copy (nowPos);
+	nowPos.copy (pos);
+	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
+}
+
+function makeCannon() {
+  let cannon = new THREE.Group();
+  let body = new THREE.Mesh (new THREE.SphereGeometry(
+    0.5,20,20, Math.PI+Math.PI*0.1,Math.PI*1.8,0,Math.PI/2), new THREE.MeshNormalMaterial());
+  barrelPart = new THREE.Group();
+  barrel = new THREE.Mesh (new THREE.CylinderGeometry(0.1,0.1,1,18), new THREE.MeshNormalMaterial());
+  barrelPart.add (barrel);
+  barrel.position.y = 0.5;
+  cannon.add (body, barrelPart);
+  return cannon;
+}
+function computeProjectile() {
+  let L = target.length();
+  theta = Math.asin(L*g/v/v)/2;
+  //console.log (L*g/v/v)
+  if (L*g/v/v > 1) {
+    $('#msg').text ('too far to hit');
+    far = 0;
+  } else {
+    $('#msg').text ('reachable');
+    far = 1;
+  }
+  barrel.rotation.z = -(Math.PI/2 - theta);
+}
+function computeInitPosVel() {
+  barrel = cannon.children[1];
+  const SPEED = 10.05;
+  vel = barrel.localToWorld (new THREE.Vector3(0,1,0)).sub (
+    barrel.localToWorld (new THREE.Vector3(0,0,0))).setLength (SPEED);
+  pos = barrel.localToWorld (new THREE.Vector3(0,0,0));
+  force = new THREE.Vector3(0,-10 ,0);
+}
+function makeProjectile () {
+  const G = 10;
+  const cT = Math.cos(theta);
+  const sT = Math.sin(theta);
+
+  let a = - G/2/v/v/cT/cT;
+  let b = v*v/G*sT*cT;
+  let c = v*v/2/G*sT*sT;
+  return makeParabola (a, b, c);
+
+}
+function makeParabola (a, b, c) {
+  let xRange = Math.sqrt(-a*c)*2/a;
+  const N = 100;
+  let dx = xRange/80;
+
+  let points = [];
+  let x0 = b - xRange/1.55;
+  for (let i = 0; i <= N; i++) {
+    xi = x0 + i*dx;
+    yi = a*(xi-b)*(xi-b) + c;
+    points.push (new THREE.Vector3(xi,yi,0));
+  }
+
+  let geometry = new THREE.BufferGeometry().setFromPoints(points);
+  let parabola = new THREE.Line (geometry, new THREE.LineDashedMaterial({color:'cyan',dashSize: 1,
+	gapSize: 0.3}));
+  parabola.computeLineDistances(); // required for LineDashedMaterial
+  return parabola;
+
+}
+function onDocumentMouseDown(event) {
+  event.preventDefault();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  ballout = 1;
+  // find intersections
+  raycaster.setFromCamera(mouse, camera);
+  var intersects = raycaster.intersectObjects(pickables);
+  if (intersects.length > 0) {
+    target.copy(intersects[0].point);
+    targetBall.position.copy(target);
+    theta = Math.PI/2 + barrel.rotation.z;
+    console.log(theta);
+    q1.copy(q2);  // save current (old) orientation
+    q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
+    //console.log(target.length());
+    counterN = 100;
+    counter = 0;
+  }
+}
+</script></body>
