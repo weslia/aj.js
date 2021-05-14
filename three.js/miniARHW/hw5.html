@@ -45,6 +45,7 @@ var renderer, scene, camera;
 var stats;
 var arToolKitSource, arToolKitContext;
 var markerHiro;
+var markerBoom;
 /////////////////////////////////////////////////
 var cannon, VerticalAngle, HorizontalAngle, barrel;
 var clock;
@@ -126,10 +127,32 @@ function init() {
 		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
 	})
 	markerHiro = addMarkerHiro();
-	scene.add (markerHiro); 
+	scene.add (markerHiro);
+	markerBoom = addMarkerBoom();
+	scene.add (markerBoom); 
 	//////////// settings /////////////////////////////////////////////
 	
 	
+}
+
+function addMarkerBoom(){
+	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+		type : 'pattern',
+		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/bombTarget.patt'
+	})
+	let loader = new THREE.TextureLoader();
+	loader.setCrossOrigin('')
+	let texture = loader.load( 'https://i.imgur.com/FoevTzs.png' );
+	let geometry = new THREE.PlaneGeometry(1, 1);
+    let material = new THREE.MeshBasicMaterial( { 
+		map: texture,
+		//color: 0xffff00,
+		side: THREE.DoubleSide
+    } );
+    let plane = new THREE.Mesh( geometry, material );
+	plane.rotation.x = Math.PI/2;
+    markerRoot.add( plane );
+	return markerRoot;
 }
 	
 function addMarkerHiro(){
