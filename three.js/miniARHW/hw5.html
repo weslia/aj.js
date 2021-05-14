@@ -128,11 +128,7 @@ function init() {
 	markerHiro = addMarkerHiro();
 	scene.add (markerHiro); 
 	//////////// settings /////////////////////////////////////////////
-	ccannon = makeCannon();
-	markerHiro.add (cannon);
 	//ball = new THREE.Mesh (new THREE.SphereGeometry(2,8,8), new THREE.MeshBasicMaterial({color:'yellow',wireframe:true}));
-	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
-	markerHiro.add (ball);
 	nowPos = new THREE.Vector3();
 	prePos = new THREE.Vector3();
 	prePos.copy(barrel.localToWorld (new THREE.Vector3(0,1.8,0)));
@@ -200,7 +196,7 @@ function animate() {
 	if(far == 1){
 		points = makeProjectile ();
 		points.name = 'projectile';
-		markerHiro.add (points);
+		markerHiro.add (points.localToWorld(points));
 		let q3 = new THREE.Quaternion();
 		q3.setFromUnitVectors(new THREE.Vector3(1, 0, 0), cannon.localToWorld (new THREE.Vector3(1,0,0)).normalize());
 		points.quaternion.copy (q3);
@@ -298,7 +294,7 @@ function makeParabola (a, b, c) {
     xi = x0 + i*dx;
     yi = a*(xi-b)*(xi-b) + c;
 	let temp = new THREE.Vector3(xi,yi,0);
-    points.push (markerHiro.localToWorld(temp));
+    points.push(temp);
   }
 
   let geometry = new THREE.BufferGeometry().setFromPoints(points);
