@@ -191,7 +191,7 @@ function animate() {
 	/////////////////////////////////////
 	markerHiro.remove(points);
 	computeProjectile();
-	markerHiro.remove (markerHiro.getObjectByName('projectile'));
+	scene.remove (markerHiro.getObjectByName('projectile'));
 	if(far == 1){
 		points = makeProjectile ();
 		points.name = 'projectile';
@@ -325,8 +325,6 @@ function onDocumentMouseDown(event) {
 }
 
 function render() {
-
 renderer.render(scene, camera);
-
 }
 </script></body>
