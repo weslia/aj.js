@@ -128,7 +128,21 @@ function init() {
 	markerHiro = addMarkerHiro();
 	scene.add (markerHiro); 
 	//////////// settings /////////////////////////////////////////////
-	//ball = new THREE.Mesh (new THREE.SphereGeometry(2,8,8), new THREE.MeshBasicMaterial({color:'yellow',wireframe:true}));
+	
+	
+}
+	
+function addMarkerHiro(){
+	let markerRoot = new THREE.Group()
+
+	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+		type : 'pattern',
+		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
+	})
+	cannon = makeCannon();
+	markerRoot.add (cannon);
+	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
+	markerRoot.add (ball);
 	nowPos = new THREE.Vector3();
 	prePos = new THREE.Vector3();
 	prePos.copy(barrel.localToWorld (new THREE.Vector3(0,1.8,0)));
@@ -163,21 +177,6 @@ function init() {
 	q2 = new THREE.Quaternion();
 	///////////////////////////////
 	computeProjectile();
-	
-}
-	
-function addMarkerHiro(){
-	let markerRoot = new THREE.Group()
-
-	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-		type : 'pattern',
-		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
-	})
-	cannon = makeCannon();
-	markerRoot.add (cannon);
-	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
-	markerRoot.add (ball);
-	
 	return markerRoot;
 }	
 
