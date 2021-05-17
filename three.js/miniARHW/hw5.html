@@ -175,6 +175,8 @@ function addMarkerHiro(){
 	cannon.rotation.y = 0;
 	///////////////////////////////////////////////////////////
 	target = new THREE.Vector3(10, 0, 0);
+	counterN = 10000;
+	counter = 0;
 	//////////////////////////
 	q1 = new THREE.Quaternion(); // null rotation
 	q2 = new THREE.Quaternion();
@@ -222,7 +224,7 @@ function animate() {
 		//console.log(ballout);
 		++counter;
 	}else{
-		counterN = 100;
+		counterN = 10000;
 		counter = 0;
 	}
 	
