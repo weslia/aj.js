@@ -220,7 +220,11 @@ function animate() {
 
 		qm.slerp(q2, alpha);
 		cannon.quaternion.copy(qm);
+		cannon.rotation.x = 0;
+		cannon.rotation.z = 0;
 		points.quaternion.copy(qm);
+		points.rotation.x = 0;
+		points.rotation.z = 0;
 		//console.log(ballout);
 		++counter;
 	}else{
