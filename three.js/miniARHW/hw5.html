@@ -197,8 +197,7 @@ function animate() {
 	q1.copy(q2);  // save current (old) orientation
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
 	//console.log(target.length());
-	counterN = 100;
-	counter = 0;
+	
 	
 
 	computeProjectile();
@@ -222,6 +221,9 @@ function animate() {
 		points.quaternion.copy(qm);
 		//console.log(ballout);
 		++counter;
+	}else{
+		counterN = 100;
+		counter = 0;
 	}
 	
 	if (pos === undefined) {
