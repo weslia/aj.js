@@ -175,7 +175,7 @@ function addMarkerHiro(){
 	cannon.rotation.y = 0;
 	///////////////////////////////////////////////////////////
 	target = new THREE.Vector3(10, 0, 0);
-	counterN = 10000;
+	counterN = 100;
 	counter = 0;
 	//////////////////////////
 	q1 = new THREE.Quaternion(); // null rotation
@@ -220,7 +220,7 @@ function animate() {
 		++counter;
 	}else{
 		q1.copy(q2);  // save current (old) orientation
-		counterN = 10000;
+		counterN = 100;
 		counter = 0;
 	}
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
