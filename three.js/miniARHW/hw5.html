@@ -11,6 +11,7 @@
 <script src="https://threejs.org/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="explode.js"></script>
 
 <head>
 <title> miniAR HW05 </title>
@@ -221,6 +222,8 @@ function animate() {
 		q1.copy(q2);  // save current (old) orientation
 		counterN = 100;
 		counter = 0;
+		computeInitPosVel();
+    	markerHiro.add (ball);
 	}
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
 	theta = Math.PI/2 + barrel.rotation.z;
@@ -232,6 +235,7 @@ function animate() {
 
 	if (pos.y < 0){
 		markerHiro.remove (ball);
+		setTimeout (spriteAnimate, 0);
 		return;
 	}
 	// Euler's method
