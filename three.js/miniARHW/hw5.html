@@ -58,7 +58,7 @@ var counter, counterN;
 var target;
 var q1, q2;
 var v = 10, g = 10, theta;
-var far;
+var far, fire = 0;
 
 init();
 animate();
@@ -223,19 +223,21 @@ function animate() {
 		q1.copy(q2);  // save current (old) orientation
 		counterN = 100;
 		counter = 0;
-		computeInitPosVel();
-    	markerHiro.add (ball);
-		
+		if(fire == 0){
+			fire = 1;
+			computeInitPosVel();
+    		markerHiro.add (ball);
+		}
 	}
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
 	theta = Math.PI/2 + barrel.rotation.z;
 	
 	if (pos === undefined) {
-		computeInitPosVel();
 		return;
 	}
 
 	if (pos.y < 0){
+		fire = 0;
 		markerHiro.remove (ball);
 		setTimeout (spriteAnimate, 0);
 		return;
@@ -276,10 +278,10 @@ function computeProjectile() {
   barrel.rotation.z = -(Math.PI/2 - theta);
 }
 function computeInitPosVel() {
-  const SPEED = v + v*0.005;
-  vel = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1,0))).sub (markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0,0)))).setLength (SPEED);
-  pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1,0)));
-  force = new THREE.Vector3(0,-g ,0);
+	const SPEED = v + v*0.005;
+	vel = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1,0))).sub(markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0,0)))).setLength (SPEED);
+	pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1,0)));
+	force = new THREE.Vector3(0,-g ,0);
 }
 function makeProjectile () {
   const G = 10;
