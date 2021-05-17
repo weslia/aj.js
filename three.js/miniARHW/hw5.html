@@ -216,9 +216,9 @@ function animate() {
 	var intersects = raycaster.intersectObjects(pickables);
 	if (intersects.length > 0) {
 		target.copy(intersects[0].point);
-		console.log(target.position.x);
+		console.log(target.position);
 		console.log("//////////");
-		console.log(target.position.y);
+		console.log(target.position);
 		targetBall.position.copy(target);
 		theta = Math.PI/2 + barrel.rotation.z;
 		q1.copy(q2);  // save current (old) orientation
