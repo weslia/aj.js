@@ -57,7 +57,7 @@ var nowPos, prePos;
 var counter, counterN;
 var target;
 var q1, q2;
-var v = 5, g = 5, theta;
+var v = 10, g = 10, theta;
 var far;
 
 init();
@@ -189,8 +189,8 @@ function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
 	
-	if( arToolkitSource.ready === false )	return
-	arToolkitContext.update( arToolkitSource.domElement )
+	if( arToolkitSource.ready === false )	return;
+	arToolkitContext.update( arToolkitSource.domElement );
 	renderer.clear();
 	renderer.render (scene, camera);
 	/////////////////////////////////////
@@ -224,6 +224,7 @@ function animate() {
 		counter = 0;
 		computeInitPosVel();
     	markerHiro.add (ball);
+		console.log(ball.position);
 	}
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
 	theta = Math.PI/2 + barrel.rotation.z;
@@ -238,6 +239,7 @@ function animate() {
 		setTimeout (spriteAnimate, 0);
 		return;
 	}
+
 	// Euler's method
 	let dt = clock.getDelta();
 	vel.add (force.clone().multiplyScalar(dt));
@@ -273,12 +275,11 @@ function computeProjectile() {
   barrel.rotation.z = -(Math.PI/2 - theta);
 }
 function computeInitPosVel() {
-  barrel = cannon.children[1];
-  const SPEED = 5.025;
+  const SPEED = v + v*0.005;
   vel = barrel.localToWorld (new THREE.Vector3(0,1,0)).sub (
     barrel.localToWorld (new THREE.Vector3(0,0,0))).setLength (SPEED);
   pos = barrel.localToWorld (new THREE.Vector3(0,0,0));
-  force = new THREE.Vector3(0,-5 ,0);
+  force = new THREE.Vector3(0,-g ,0);
 }
 function makeProjectile () {
   const G = 10;
