@@ -81,7 +81,7 @@ function setUpOffsetArray() {
 
 function _spriteAnimate() {
  let msg = `[${baseS}] [${baseT}]`
- console.log (msg);
+ //console.log (msg);
   
   sprite.material.map.offset.copy (uvOffsetArray[baseS][baseT]);  
   baseT = (baseT + 1) % 8;
