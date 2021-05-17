@@ -49,16 +49,15 @@ var markerBoom;
 /////////////////////////////////////////////////
 var cannon, VerticalAngle, HorizontalAngle, barrel;
 var clock;
-var ball, line = new THREE.Group(), points;
+var ball, points;
 var pos, vel, force;
 var nowPos, prePos;
 /////////////////////
 var counter, counterN;
-var pickables = [];
 var target;
 var q1, q2;
 var v = 10, g = 10, theta;
-var far, ballout = 0;
+var far;
 
 init();
 animate();
@@ -192,9 +191,7 @@ function animate() {
 	renderer.clear();
 	renderer.render (scene, camera);
 	/////////////////////////////////////
-	
 	target.copy(markerHiro.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0))));
-	var intersects = raycaster.intersectObjects(pickables);
 	
 	theta = Math.PI/2 + barrel.rotation.z;
 	q1.copy(q2);  // save current (old) orientation
