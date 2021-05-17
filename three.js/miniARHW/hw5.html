@@ -54,8 +54,8 @@ var pos, vel, force;
 var nowPos, prePos;
 /////////////////////
 var counter, counterN;
-var pickables = [], mouse, raycaster;
-var target, targetBall;
+var pickables = [];
+var target;
 var q1, q2;
 var v = 10, g = 10, theta;
 var far, ballout = 0;
@@ -174,27 +174,8 @@ function addMarkerHiro(){
 	barrel = cannon.children[1]
 	barrel.rotation.z = -Math.PI/6; // barrel angle
 	cannon.rotation.y = 0;
-	////////////////////////////////////////////////
-	mouse = new THREE.Vector2();
-	var plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({
-		color: 'pink',
-		transparent: true,
-		opacity: 0.3
-	}));
-	markerRoot.add(plane);
-	plane.rotation.x = -Math.PI / 2;
-	pickables.push(plane);
-	document.addEventListener('pointerdown', onDocumentMouseDown, false);
-	raycaster = new THREE.Raycaster();
 	///////////////////////////////////////////////////////////
-	targetBall = new THREE.Mesh(new THREE.OctahedronGeometry(0.5), new THREE.MeshBasicMaterial({
-		color: 'cyan',
-		wireframe: true
-	}));
-	markerRoot.add(targetBall);
 	target = new THREE.Vector3(10, 0, 0);
-	targetBall.position.copy(target);
-
 	//////////////////////////
 	q1 = new THREE.Quaternion(); // null rotation
 	q2 = new THREE.Quaternion();
@@ -214,19 +195,14 @@ function animate() {
 	
 	target.copy(markerHiro.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0))));
 	var intersects = raycaster.intersectObjects(pickables);
-	if (intersects.length > 0) {
-		target.copy(intersects[0].point);
-		console.log(target.position);
-		console.log("//////////");
-		console.log(target.position);
-		targetBall.position.copy(target);
-		theta = Math.PI/2 + barrel.rotation.z;
-		q1.copy(q2);  // save current (old) orientation
-		q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
-		//console.log(target.length());
-		counterN = 100;
-		counter = 0;
-	}
+	
+	theta = Math.PI/2 + barrel.rotation.z;
+	q1.copy(q2);  // save current (old) orientation
+	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
+	//console.log(target.length());
+	counterN = 100;
+	counter = 0;
+	
 
 	computeProjectile();
 	markerHiro.remove (markerHiro.getObjectByName('projectile'));
@@ -311,7 +287,6 @@ function makeProjectile () {
   let b = v*v/G*sT*cT;
   let c = v*v/2/G*sT*sT;
   return makeParabola (a, b, c);
-
 }
 function makeParabola (a, b, c) {
   let xRange = Math.sqrt(-a*c)*2/a;
@@ -333,7 +308,7 @@ function makeParabola (a, b, c) {
   parabola.computeLineDistances(); // required for LineDashedMaterial
   return parabola;
 
-}
+}/*
 function onDocumentMouseDown(event) {
   event.preventDefault();
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -353,9 +328,9 @@ function onDocumentMouseDown(event) {
     counterN = 100;
     counter = 0;
   }
-}
+}*/
 
 function render() {
-renderer.render(scene, camera);
+	renderer.render(scene, camera);
 }
 </script></body>
