@@ -165,7 +165,8 @@ function addMarkerHiro(){
 	})
 	cannon = makeCannon();
 	markerRoot.add (cannon);
-	ball = new THREE.Mesh (new THREE.CylinderGeometry(0.052,0.2,0.5,20), new THREE.MeshNormalMaterial());
+	ball = new THREE.Mesh (new THREE.CylinderGeometry(.028,0.1,0.25,20), new THREE.MeshPhongMaterial({color:'yellow',wireframe:true}));
+    light = new THREE.PointLight( 0xffffff, 1);
 	markerRoot.add (ball);
 	clock = new THREE.Clock();
 	//// settings //////////////////////
@@ -191,7 +192,8 @@ function addMarkerHiro(){
 function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
-	
+	light.position.copy(ball.position.add(new Vector3(0, 1, 0)));
+
 	if( arToolkitSource.ready === false )	return;
 	arToolkitContext.update( arToolkitSource.domElement );
 	renderer.clear();
