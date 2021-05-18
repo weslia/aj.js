@@ -192,7 +192,7 @@ function addMarkerHiro(){
 function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
-	light.position.copy(ball.position.add(new Vector3(0, 1, 0)));
+	light.position.copy(ball.position.add(new THREE.Vector3(0, 1, 0)));
 
 	if( arToolkitSource.ready === false )	return;
 	arToolkitContext.update( arToolkitSource.domElement );
