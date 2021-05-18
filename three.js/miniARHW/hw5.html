@@ -234,10 +234,11 @@ function animate() {
 		return;
 	}
 
-	if (pos.y < 0){
+	if (pos.y < 0 && fire == 1){
 		fire = 0;
 		markerHiro.remove (ball);
-		markerBoom.remove (plane);
+		//markerBoom.remove (plane);
+		computeInitPosVel();
 		setTimeout (spriteAnimate, 0);
 		return;
 	}
@@ -281,6 +282,8 @@ function computeInitPosVel() {
 	vel = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1,0))).sub(markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0,0)))).setLength (SPEED);
 	pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1,0)));
 	force = new THREE.Vector3(0,-g ,0);
+	nowPos.copy(pos);
+	prePos.copy(markerRoot.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1.8,0))));
 }
 function makeProjectile () {
   const G = 10;
