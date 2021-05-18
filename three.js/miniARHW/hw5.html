@@ -241,12 +241,13 @@ function animate() {
 
 	if (pos.y < 0 && fire == 1){
 		fire = 0;
-		markerHiro.remove (ball);
 		computeInitPosVel();
+		console.log(ball.position.clone().sub(target));
 		if(ball.position.clone().sub(target).length() <= 0.5){
 			setTimeout (spriteAnimate, 0);
 			markerBoom.remove (plane);
 		}
+		markerHiro.remove (ball);
 		//markerBoom.remove (plane);
 		return;
 	}
