@@ -241,7 +241,7 @@ function animate() {
 		fire = 0;
 		markerHiro.remove (ball);
 		computeInitPosVel();
-		if(ball.position.sub(target.position).normalize() <1){
+		if(ball.position.clone().sub(target.position).normalize() <1){
 			setTimeout (spriteAnimate, 0);
 			markerBoom.remove (plane);
 		}
