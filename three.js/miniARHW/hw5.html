@@ -57,7 +57,7 @@ var nowPos, prePos;
 var counter, counterN;
 var target;
 var q1, q2;
-var v = 10, g = 10, theta;
+var v = 10, g = 15, theta;
 var far, fire = 0;
 
 init();
@@ -240,9 +240,12 @@ function animate() {
 	if (pos.y < 0 && fire == 1){
 		fire = 0;
 		markerHiro.remove (ball);
-		//markerBoom.remove (plane);
 		computeInitPosVel();
-		setTimeout (spriteAnimate, 0);
+		if(ball.position.sub(target.position).normalize() <1){
+			setTimeout (spriteAnimate, 0);
+			markerBoom.remove (plane);
+		}
+		//markerBoom.remove (plane);
 		return;
 	}
 
