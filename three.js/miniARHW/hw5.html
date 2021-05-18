@@ -187,6 +187,7 @@ function addMarkerHiro(){
 	computeProjectile();
 	return markerRoot;
 }	
+
 function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
@@ -208,7 +209,6 @@ function animate() {
 	}
 
 	if (counter < counterN) {
-		computeInitPosVel();
 		markerHiro.remove (ball);
 		markerHiro.add (ball);
 
@@ -247,12 +247,12 @@ function animate() {
 
 	// Euler's method
 	let dt = clock.getDelta();
-	/*vel.add (force.clone().multiplyScalar(dt));
+	vel.add (force.clone().multiplyScalar(dt));
 	pos.add (vel.clone().multiplyScalar(dt));
 	ball.position.copy (pos);
 	prePos.copy (nowPos);
 	nowPos.copy (pos);
-	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());*/
+	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
 }
 
 function makeCannon() {
