@@ -50,7 +50,7 @@ var markerBoom;
 /////////////////////////////////////////////////
 var cannon, VerticalAngle, HorizontalAngle, barrel;
 var clock;
-var ball, points, plane;
+var ball, points, tower;
 var pos, vel, force;
 var nowPos, prePos;
 /////////////////////
@@ -142,7 +142,7 @@ function addMarkerBoom(){
 		type : 'pattern',
 		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/bombTarget.patt'
 	})
-	let loader = new THREE.TextureLoader();
+	/*let loader = new THREE.TextureLoader();
 	loader.setCrossOrigin('')
 	let texture = loader.load( 'https://i.imgur.com/FoevTzs.png' );
 	let geometry = new THREE.PlaneGeometry(1, 1);
@@ -153,7 +153,19 @@ function addMarkerBoom(){
     } );
     plane = new THREE.Mesh( geometry, material );
 	plane.rotation.x = Math.PI/2;
-    markerRoot.add( plane );
+    markerRoot.add( plane );*/
+	tower = new THREE.Group();
+	let geometry = new THREE.CylinderGeometry( 1, 1, 2, 80 );
+	let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cylinder = new THREE.Mesh( geometry, material );
+	tower.add( cylinder );
+	cylinder.position.set(0, 1, 0);
+	let geometry = new THREE.ConeGeometry( 1.5, 1, 80 );
+	let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cone = new THREE.Mesh( geometry, material );
+	tower.add( cone );
+	cone.position.set(0, 2.5 , 0);
+	markerRoot.add( tower );
 	return markerRoot;
 }
 function addMarkerHiro(){
@@ -165,7 +177,18 @@ function addMarkerHiro(){
 	})
 	cannon = makeCannon();
 	markerRoot.add (cannon);
-	ball = new THREE.Mesh (new THREE.CylinderGeometry(.028,0.1,0.25,20), new THREE.MeshPhongMaterial({color:'yellow',wireframe:true}));
+	//ball = new THREE.Mesh (new THREE.CylinderGeometry(.028,0.1,0.25,20), new THREE.MeshPhongMaterial({color:'yellow',wireframe:true}));
+	ball = new THREE.Group();
+	let cylindergeometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.06, 80 );
+	let cylindermaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cylinder = new THREE.Mesh( cylindergeometry, cylindermaterial );
+	ball.add( cylinder );
+	cylinder.position.set(0, 0.03, 0);
+	let conegeometry = new THREE.ConeGeometry( 0.03, 0.03, 80 );
+	let conematerial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cone = new THREE.Mesh( conegeometry, conematerial );
+	ball.add( cone );
+	cone.position.set(0, 0.09 , 0);
     light = new THREE.PointLight( 0xffffff, 1);
 	markerRoot.add (ball);
 	clock = new THREE.Clock();
@@ -200,7 +223,7 @@ function animate() {
 	renderer.render (scene, camera);
 	/////////////////////////////////////
 	target.copy(markerHiro.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0))));
-	target.y = 0;
+	target.y = 1;
 
 	computeProjectile();
 	markerHiro.remove (markerHiro.getObjectByName('projectile'));
@@ -245,10 +268,9 @@ function animate() {
 		console.log(ball.position.clone().sub(target).length());
 		if(ball.position.clone().sub(target).length() <= 0.5){
 			setTimeout (spriteAnimate, 0);
-			markerBoom.remove (plane);
+			markerBoom.remove (tower);
 		}
 		markerHiro.remove (ball);
-		//markerBoom.remove (plane);
 		return;
 	}
 
@@ -260,7 +282,6 @@ function animate() {
 	prePos.copy (nowPos);
 	nowPos.copy (pos);
 	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
-	
 }
 
 function makeCannon() {
