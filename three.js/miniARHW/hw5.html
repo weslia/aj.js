@@ -228,6 +228,13 @@ function animate() {
 			computeInitPosVel();
     		markerHiro.add (ball);
 		}
+		let dt = clock.getDelta();
+		vel.add (force.clone().multiplyScalar(dt));
+		pos.add (vel.clone().multiplyScalar(dt));
+		ball.position.copy (pos);
+		prePos.copy (nowPos);
+		nowPos.copy (pos);
+		ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
 	}
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
 	theta = Math.PI/2 + barrel.rotation.z;
@@ -241,7 +248,7 @@ function animate() {
 		fire = 0;
 		markerHiro.remove (ball);
 		computeInitPosVel();
-		if(ball.position.clone().sub(target).normalize() <= 0.5){
+		if(ball.position.clone().sub(target).length() <= 0.5){
 			setTimeout (spriteAnimate, 0);
 			markerBoom.remove (plane);
 		}
@@ -250,13 +257,8 @@ function animate() {
 	}
 
 	// Euler's method
-	let dt = clock.getDelta();
-	vel.add (force.clone().multiplyScalar(dt));
-	pos.add (vel.clone().multiplyScalar(dt));
-	ball.position.copy (pos);
-	prePos.copy (nowPos);
-	nowPos.copy (pos);
-	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
+	
+	
 }
 
 function makeCannon() {
@@ -285,8 +287,8 @@ function computeProjectile() {
 }
 function computeInitPosVel() {
 	const SPEED = v + v*0.005;
-	vel = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0.5,0))).sub(markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0,0)))).setLength (SPEED);
-	pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0,0)));
+	vel = markerHiro.worldToLocal(barrel.localToWorld(new THREE.Vector3(0,0.5,0))).sub(markerHiro.worldToLocal(barrel.localToWorld(new THREE.Vector3(0,0,0)))).setLength(SPEED);
+	pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0.5,0)));
 	force = new THREE.Vector3(0,-g ,0);
 	nowPos.copy(pos);
 	prePos.copy(markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1.8,0))));
