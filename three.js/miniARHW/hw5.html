@@ -228,13 +228,7 @@ function animate() {
 			computeInitPosVel();
     		markerHiro.add (ball);
 		}
-		let dt = clock.getDelta();
-		vel.add (force.clone().multiplyScalar(dt));
-		pos.add (vel.clone().multiplyScalar(dt));
-		ball.position.copy (pos);
-		prePos.copy (nowPos);
-		nowPos.copy (pos);
-		ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
+		
 	}
 	q2.setFromUnitVectors(new THREE.Vector3(1, 0, 0), target.clone().normalize());  // compute new oriention
 	theta = Math.PI/2 + barrel.rotation.z;
@@ -257,7 +251,13 @@ function animate() {
 	}
 
 	// Euler's method
-	
+	let dt = clock.getDelta();
+	/*vel.add (force.clone().multiplyScalar(dt));
+	pos.add (vel.clone().multiplyScalar(dt));
+	ball.position.copy (pos);
+	prePos.copy (nowPos);
+	nowPos.copy (pos);
+	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());*/
 	
 }
 
