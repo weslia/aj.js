@@ -287,6 +287,7 @@ function computeProjectile() {
 }
 function computeInitPosVel() {
 	const SPEED = v + v*0.005;
+	barrel.rotation.z = -(Math.PI/2 - theta);
 	vel = markerHiro.worldToLocal(barrel.localToWorld(new THREE.Vector3(0,0.5,0))).sub(markerHiro.worldToLocal(barrel.localToWorld(new THREE.Vector3(0,0,0)))).setLength(SPEED);
 	pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0.5,0)));
 	force = new THREE.Vector3(0,-g ,0);
