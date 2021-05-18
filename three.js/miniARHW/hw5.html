@@ -169,7 +169,7 @@ function addMarkerHiro(){
 	markerRoot.add (ball);
 	nowPos = new THREE.Vector3();
 	prePos = new THREE.Vector3();
-	prePos.copy(barrel.localToWorld (new THREE.Vector3(0,1.8,0)));
+	prePos.copy(markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,1.8,0))));
 	clock = new THREE.Clock();
 	//// settings //////////////////////
 	barrel = cannon.children[1]
@@ -239,17 +239,18 @@ function animate() {
 	if (pos.y < 0){
 		fire = 0;
 		markerHiro.remove (ball);
+		markerBoom.remove (plane);
 		setTimeout (spriteAnimate, 0);
 		return;
 	}
 
 	// Euler's method
 	let dt = clock.getDelta();
-	vel.add (force.clone().multiplyScalar(dt));
+	/*vel.add (force.clone().multiplyScalar(dt));
 	pos.add (vel.clone().multiplyScalar(dt));
 	ball.position.copy (pos);
 	prePos.copy (nowPos);
-	nowPos.copy (pos);
+	nowPos.copy (pos);*/
 	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
 }
 
