@@ -155,14 +155,14 @@ function addMarkerBoom(){
 	plane.rotation.x = Math.PI/2;
     markerRoot.add( plane );*/
 	tower = new THREE.Group();
-	let geometry = new THREE.CylinderGeometry( 1, 1, 2, 80 );
-	let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-	let cylinder = new THREE.Mesh( geometry, material );
+	let cylindergeometry = new THREE.CylinderGeometry( 1, 1, 2, 80 );
+	let cylindermaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cylinder = new THREE.Mesh( cylindergeometry, cylindermaterial );
 	tower.add( cylinder );
 	cylinder.position.set(0, 1, 0);
-	let geometry = new THREE.ConeGeometry( 1.5, 1, 80 );
-	let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-	let cone = new THREE.Mesh( geometry, material );
+	let conegeometry = new THREE.ConeGeometry( 1.5, 1, 80 );
+	let conematerial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cone = new THREE.Mesh( conegeometry, conematerial );
 	tower.add( cone );
 	cone.position.set(0, 2.5 , 0);
 	markerRoot.add( tower );
