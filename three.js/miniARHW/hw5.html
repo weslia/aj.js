@@ -57,7 +57,7 @@ var nowPos, prePos;
 var counter, counterN;
 var target;
 var q1, q2;
-var v = 5, g = 10, theta;
+var v = 7, g = 10, theta;
 var far, fire = 0;
 
 init();
@@ -216,7 +216,8 @@ function animate() {
 
 		qm.slerp(q2, alpha);
 		cannon.quaternion.copy(qm);
-		points.quaternion.copy(qm);
+		if(far == 1)
+			points.quaternion.copy(qm);
 		//console.log(ballout);
 		++counter;
 	}else{
