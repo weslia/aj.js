@@ -192,7 +192,7 @@ function addMarkerHiro(){
 function animate() {
 	requestAnimationFrame (animate);
 	stats.update();
-	light.position.copy(ball.position.add(new THREE.Vector3(0, 1, 0)));
+	light.position.copy(ball.position.clone().add(new THREE.Vector3(0, 1, 0)));
 
 	if( arToolkitSource.ready === false )	return;
 	arToolkitContext.update( arToolkitSource.domElement );
@@ -252,12 +252,12 @@ function animate() {
 
 	// Euler's method
 	let dt = clock.getDelta();
-	/*vel.add (force.clone().multiplyScalar(dt));
-	pos.add (vel.clone().multiplyScalar(dt));*/
+	vel.add (force.clone().multiplyScalar(dt));
+	pos.add (vel.clone().multiplyScalar(dt));
 	ball.position.copy (pos);
-	/*prePos.copy (nowPos);
+	prePos.copy (nowPos);
 	nowPos.copy (pos);
-	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());*/
+	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
 	
 }
 
