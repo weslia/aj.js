@@ -50,7 +50,7 @@ var markerBoom;
 /////////////////////////////////////////////////
 var cannon, VerticalAngle, HorizontalAngle, barrel;
 var clock;
-var ball, points;
+var ball, points, plane;
 var pos, vel, force;
 var nowPos, prePos;
 /////////////////////
@@ -151,7 +151,7 @@ function addMarkerBoom(){
 		//color: 0xffff00,
 		side: THREE.DoubleSide
     } );
-    let plane = new THREE.Mesh( geometry, material );
+    plane = new THREE.Mesh( geometry, material );
 	plane.rotation.x = Math.PI/2;
     markerRoot.add( plane );
 	return markerRoot;
@@ -247,12 +247,12 @@ function animate() {
 
 	// Euler's method
 	let dt = clock.getDelta();
-	vel.add (force.clone().multiplyScalar(dt));
+	/*vel.add (force.clone().multiplyScalar(dt));
 	pos.add (vel.clone().multiplyScalar(dt));
 	ball.position.copy (pos);
 	prePos.copy (nowPos);
 	nowPos.copy (pos);
-	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());
+	ball.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), nowPos.clone().sub(prePos).normalize());*/
 }
 
 function makeCannon() {
