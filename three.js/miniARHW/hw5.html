@@ -246,7 +246,7 @@ function animate() {
 		q1.copy(q2);  // save current (old) orientation
 		counterN = 100;
 		counter = 0;
-		if(fire == 0 && markerBoom.visible === true){
+		if(fire == 0 && markerBoom.visible === true && tower.visible === true){
 			fire = 1;
 			computeInitPosVel();
     		markerHiro.add (ball);
