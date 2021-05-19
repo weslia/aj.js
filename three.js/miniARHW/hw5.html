@@ -57,7 +57,7 @@ var nowPos, prePos;
 var counter, counterN;
 var target;
 var q1, q2;
-var v = 10, g = 10, theta;
+var v = 3, g = 1, theta;
 var far, fire = 0;
 
 init();
@@ -309,7 +309,8 @@ function computeProjectile() {
   barrel.rotation.z = -(Math.PI/2 - theta);
 }
 function computeInitPosVel() {
-	const SPEED = v + v*0.005;
+	let L = target.length();
+	const SPEED = L*0.8;
 	barrel.rotation.z = -(Math.PI/2 - theta);
 	vel = markerHiro.worldToLocal(barrel.localToWorld(new THREE.Vector3(0,0.5,0))).sub(markerHiro.worldToLocal(barrel.localToWorld(new THREE.Vector3(0,0,0)))).setLength(SPEED);
 	pos = markerHiro.worldToLocal(barrel.localToWorld (new THREE.Vector3(0,0.5,0)));
