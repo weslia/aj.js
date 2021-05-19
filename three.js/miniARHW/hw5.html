@@ -223,7 +223,7 @@ function animate() {
 	renderer.render (scene, camera);
 	/////////////////////////////////////
 	target.copy(markerHiro.worldToLocal(markerBoom.localToWorld(new THREE.Vector3(0,0,0))));
-	target.y = 1;
+	target.y = 0;
 
 	computeProjectile();
 	markerHiro.remove (markerHiro.getObjectByName('projectile'));
