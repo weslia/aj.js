@@ -329,8 +329,8 @@ function makeProjectile () {
 }
 function makeParabola (a, b, c) {
   let xRange = Math.sqrt(-a*c)*2/a;
-  const N = 100;
-  let dx = xRange/80;
+  const N = 20;
+  let dx = xRange/20;
 
   let points = [];
   let x0 = b - xRange/1.55;
