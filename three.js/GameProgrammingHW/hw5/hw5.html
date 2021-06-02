@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00
+}
+
+body {
+  overflow: hidden
+}
+</style>
+</head>
+<body>
+<div id="info">Simple Path Following hw5</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script>
+// IIFE addition of clamp function
+( function( ) {
+  Math.clamp = function(val,min,max) {
+    return Math.min(Math.max(val,min),max);
+  } 
+} )();
+
+class Agent {
+  constructor(pos, mesh) {
+    this.pos = pos.clone();
+    this.vel = new THREE.Vector3();
+    this.force = new THREE.Vector3();
+    this.target = null;
+    this.size = 3;
+    this.mesh = mesh;
+    this.mesh.position.copy(this.pos);
+    scene.add (mesh);
+    this.MAXSPEED = 5;
+    this.MINSPEED = 2;
+    this.ARRIVAL_R = 30;
+		
+    this.nbhd = [];
+    // for orientable agent
+    this.angle = 0;
+  }
+
+  update(dt) {
+    this.accumulateForceL1(-50,0,-20,15);
+    this.accumulateForceL1(-20,15,20,-15);
+    this.accumulateForceL1(20,-15,50,0);
+    
+    this.vel.add(this.force.clone().multiplyScalar(dt));
+    
+    // ARRIVAL: velocity modulation
+    if (this.target) {
+      let diff = this.target.clone().sub(this.pos)
+      let dst = diff.length();
+      if (dst < this.ARRIVAL_R) {
+        this.vel.setLength(dst)
+      }
+    }
+    // MAXSPEED modulation
+    let speed = this.vel.length()
+    this.vel.setLength(Math.clamp (speed, this.MINSPEED, this.MAXSPEED))
+    this.pos.add(this.vel.clone().multiplyScalar(dt))
+    this.mesh.position.copy(this.pos)
+    // for orientable agent
+    if (this.vel.length() > 1) {
+      this.angle = Math.atan2 (this.vel.y, this.vel.x)
+      this.mesh.rotation.z = this.angle;
+    }
+  }
+  setTarget(x,y,z) {
+    if (this.target)
+      this.target.set(x,y,z);
+    else
+      this.target = new THREE.Vector3(x,y,z);
+  }
+  targetInducedForce(targetPos, mode=0) { // seek
+    let speed;
+    if (mode === 0)
+      speed = this.MAXSPEED;
+    else if (mode === 1)
+      speed = this.vel.length();
+
+    return targetPos.clone().sub(this.pos).normalize().multiplyScalar(speed).sub(this.vel)
+  }
+
+  accumulateForceL1(sx,sy,ex,ey) {
+    if(this.pos.x >= sx &&　this.pos.x <=　ex){
+      this.force.set (0,0,0);
+      if (this.target)
+        this.force.add(this.targetInducedForce(this.target));
+
+      let pS = new THREE.Vector3(sx,sy,0); //路徑開始
+      let pE = new THREE.Vector3(ex,ey,0); //路徑結束
+      let pHat = pE.clone().sub(pS).normalize(); //算出路徑方向
+      let posF = this.pos.clone().add (this.vel); // 算出 agent 的未來位置
+      //comput proj
+      let tmp = posF.clone().sub(pS); 
+      let proj = pHat.multiplyScalar(tmp.dot(pHat)).add(pS); // 算出未來位置在路徑的投影點
+      let distance = posF.distanceTo(proj); //算出與線距離
+      if (distance > radius) { //要是與線距離夠短
+        let correction = this.targetInducedForce(proj, 1); //
+        this.force.add (correction);
+      }
+      
+      // separation  push
+      let push = new THREE.Vector3();
+      for (let i = 0; i < this.nbhd.length; i++) {
+        let point = this.pos.clone().sub(this.nbhd[i].pos);
+        push.add(point.setLength(0.5 / point.length()));
+      }
+      this.force.add(push);
+    }
+    /*
+    // path related (for simple straight line)
+    let posF = agent.pos.clone().add (agent.vel);
+    let proj = new THREE.Vector3(posF.x, 0, 0);
+    //console.log (proj);
+    if (posF.y > radius || posF.y < -radius) {
+  		let correction = this.targetInducedForce(proj, 1);
+      this.force.add (correction);
+    }
+		*/
+  }
+  distanceTo(otherAgent) {
+    return this.pos.distanceTo(otherAgent.pos)
+  }
+  addNbr(otherAgent) {
+    this.nbhd.push(otherAgent)
+  }
+}
+
+function drawPath(sx,sy,ex,ey,radius){
+  let pS = new THREE.Vector3 (sx,sy,-1);
+  let pE = new THREE.Vector3 (ex,ey,-1);
+
+  let end = new THREE.Mesh (new THREE.CircleGeometry (radius,20), new THREE.MeshBasicMaterial({color:'yellow', transparent:true, opacity:0.2}));
+  let end2 = end.clone();
+  end.position.copy (pS);
+  end2.position.copy (pE);
+  scene.add (end, end2);
+
+  let path = new THREE.Mesh (new THREE.PlaneGeometry (pS.distanceTo(pE), 2*radius), new THREE.MeshBasicMaterial({color:'yellow', transparent:true, opacity:0.2}));
+  scene.add (path);
+
+  let center = pS.clone().add(pE).multiplyScalar(0.5);// (pS+pE)/2
+  path.position.copy (center);
+  let p = pE.clone().sub(pS); // pE-pS
+  let angle = Math.atan2(p.y, p.x);
+  path.rotation.z = angle;
+}
+function newAnt () {
+  let randColor = Math.random()*0xffffff;
+  let circle = new THREE.Mesh (new THREE.CircleGeometry(2,20), new THREE.MeshBasicMaterial({color:randColor}));
+
+	let pos = new THREE.Vector3(-20,10+Math.random()*10,0);
+	let agent = new Agent (pos, circle);
+  agent.vel.set (4,-8+Math.random()*10,0);
+  agents.push (agent);
+  
+  if (agents.length < 10)
+  	setTimeout (newAnt, 2000); 
+}
+function findNbhd(agents) {
+  let i, j, dst;
+  let nAgents = agents.length;
+  
+  // 這樣的 double-for-loop對嗎？
+  agents.forEach(function(agent){agent.nbhd=[]});
+  
+  for (i = 0; i < nAgents - 1; i++) {
+    for (j = i + 1; j < nAgents; j++) {
+      dst = agents[i].distanceTo(agents[j])
+      if (dst < 10) { // NBHD = 20
+        agents[i].addNbr(agents[j])
+        agents[j].addNbr(agents[i])
+      }
+    }
+  }
+}
+
+var camera, scene, renderer;
+var agents = [];
+var radius;
+
+init();
+animate();
+
+function init() {
+  renderer = new THREE.WebGLRenderer({
+    antialias: true
+  });
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
+  document.body.appendChild(renderer.domElement);
+
+  scene = new THREE.Scene();
+  camera = new THREE.OrthographicCamera(-50, 50, 50, -50, -10, 100);
+  camera.position.z = 10;
+
+  let grid = new THREE.GridHelper (100,10, 'red','white');
+  grid.rotation.x = -Math.PI/2;
+  scene.add (grid);
+
+  /////////////////////////////////////////////////////////
+	
+  newAnt ();
+  /*let mesh = new THREE.Mesh (new THREE.CircleGeometry(1,20), new THREE.MeshBasicMaterial({color:'cyan'}));
+  //scene.add (circle);
+
+  let pos = new THREE.Vector3(4,4,0);
+  agent = new Agent (pos, mesh);
+  agent.vel.set (2,-2,0);*/
+
+  //////////////////////////////////////
+  radius = 4;
+  drawPath(-50,0,-20,15,radius);
+  drawPath(-20,15,20,-15,radius);
+  drawPath(20,-15,50,0,radius);
+  /*let path = new THREE.Mesh (new THREE.PlaneGeometry(100,radius*2), new THREE.MeshBasicMaterial({color:'yellow', transparent:true, opacity:0.2}));
+  scene.add (path); */
+}
+
+
+function animate() {
+  requestAnimationFrame(animate);
+  render();
+
+  let dt = 0.1;
+  
+  findNbhd(agents);
+  agents.forEach (function(agent) {
+  	agent.update(dt);
+  	if (agent.pos.x > 50) 
+    	agent.pos.x = -50;
+  });
+  
+	//agent.update(dt);
+  // portal
+  //if (agent.pos.x > 50) agent.pos.x = -50;
+	
+}
+
+function render() {
+  renderer.render(scene, camera);
+}
+</script>
+</body>
+
+</html>
