@@ -65,6 +65,7 @@ var camera, scene, renderer;
 var keyboard;
 var RR;
 var state = 0;
+var temp;
 
 init();
 animate();
@@ -231,20 +232,31 @@ function animate() {
   if (keyboard.down('up')) {
   	pawn.position.y += 0.1;
     state = inOut (pawn.position.x, pawn.position.y, tree, RR);
+    if(temp === 1 && state === 1)
+      pawn.position.y -= 0.1;
+    temp = state;
   } 
-  
   if (keyboard.down('down')) {
   	pawn.position.y -= 0.1;
     state = inOut (pawn.position.x, pawn.position.y, tree, RR);
+    if(temp === 1 && state === 1)
+      pawn.position.y += 0.1;
+    temp = state;
   } 
 
   if (keyboard.down('left')) { 
   	pawn.position.x -= 0.1;
     state = inOut (pawn.position.x, pawn.position.y, tree, RR);
+    if(temp === 1 && state === 1)
+      pawn.position.x += 0.1;
+    temp = state;
   }
   if (keyboard.down('right')) {
   	pawn.position.x += 0.1;
     state = inOut (pawn.position.x, pawn.position.y, tree, RR);
+    if(temp === 1 && state === 1)
+      pawn.position.x -= 0.1;
+    temp = state;
   } 
   
   if (state === 1) { // solid
